@@ -1,4 +1,4 @@
-package com.islamicwallpaper;
+package com.islamicwallpaper.zs;
 
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;

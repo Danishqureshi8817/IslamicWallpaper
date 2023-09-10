@@ -1,5 +1,5 @@
 {
-  "name": "IslamicWallpaper",
+  "name": "islamicwallpaper",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.19.3",
+    "@react-native-firebase/app": "^18.3.2",
+    "@react-native-firebase/messaging": "^18.3.2",
     "@react-navigation/native": "^6.1.7",
     "@react-navigation/native-stack": "^6.9.13",
     "react": "18.2.0",

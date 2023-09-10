@@ -1,4 +1,4 @@
-package com.islamicwallpaper;
+package com.islamicwallpaper.zs;
 
 import android.app.Application;
 import com.facebook.react.PackageList;
