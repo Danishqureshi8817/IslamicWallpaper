@@ -15,7 +15,7 @@ const Header = () => {
     <View style={styles.headerWrapper} >
 
     <View style={styles.headerSubWrapper} >
-        <Icon onPress={() => { }} name="menu" size={responsiveWidth(7)} color={colors.white} />
+        <Icon onPress={() => { }} name="menu" size={responsiveWidth(7)} color={colors.black} />
         <Text style={styles.heading} >Islamic Wallpaper</Text>
     </View>    
         <Image source={avtar} style={styles.avtar}/>
@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
         paddingTop:responsiveHeight(1)
     },
     heading:{
-        color:colors.white,
+        color:colors.black,
         fontSize:responsiveFontSize(2.2),
         fontWeight:'600'
     },

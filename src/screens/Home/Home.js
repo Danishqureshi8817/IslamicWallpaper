@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View,Image,FlatList,ImageBackground,TouchableOpacity } from 'react-native'
-import React from 'react'
+import { StyleSheet, Text, View,Image,FlatList,ImageBackground,TouchableOpacity,Linking, PermissionsAndroid,ToastAndroid } from 'react-native'
+import React,{useState,useEffect} from 'react'
 import colors from '../../styles/colors'
 import { background } from '../../contants/imagePaths'
 import Header from '../../components/Header'
@@ -10,35 +10,149 @@ import {
   } from 'react-native-responsive-dimensions';
 import { wWidht } from '../../styles/Dimensions'
 import Icon from 'react-native-vector-icons/Ionicons';
+import Share from 'react-native-share';
+import RNFetchBlob from 'rn-fetch-blob'
+import NavigationString from '../../contants/NavigationString'
 
-const Home = () => {
+
+const Home = ({navigation}) => {
+
+  const [selectedId, setSelectedId] = useState();
 
   const hadisData = [
     {
         id:'01',
-        img:require('../../assets/images/h1.jpg')
+        img:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR5dtjsLKRZb_ipdnFqAS8ic80Te5wEZyUfBg&usqp=CAU"
     },
     {
         id:'02',
-        img:require('../../assets/images/h2.jpg')
+        img:"https://i.pinimg.com/736x/14/98/0e/14980e0e4024f1d4757f993793f4eb85.jpg"
     },
     {
         id:'03',
-        img:require('../../assets/images/h3.jpg')
+        img:"https://i.pinimg.com/736x/f9/87/df/f987dfccfe88f125a742af67f232ebfe.jpg"
     },
     {
         id:'04',
-        img:require('../../assets/images/h4.jpg')
+        img:"https://i.pinimg.com/736x/a3/87/2c/a3872c07d5b3152ffe25a8940bba50c5.jpg"
     },
   ]
 
+  // const imageShr = ''
+
+  const requestStoragePermission = async () => {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+        {
+          title: 'Islamic App Storage Permission',
+          message:
+            'Islamic App needs access to your Storage ' +
+            'so you can download Wallpaper.',
+          buttonNeutral: 'Ask Me Later',
+          buttonNegative: 'Cancel',
+          buttonPositive: 'OK',
+        },
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        downloadFile()
+      } else {
+        console.log('Storage permission denied');
+      }
+    } catch (err) {
+      console.warn(err);
+    }
+  };
+
+  const downloadFile= () => {
+        const {config,fs} = RNFetchBlob;
+        const date = new Date()
+        const fileDir = fs.dirs.DownloadDir;
+   
+  config({
+    // add this option that makes response data to be stored as a file,
+    // this is much more performant.
+    fileCache : true,
+    addAndroidDownloads:{
+      useDownloadManager:true,
+      notification:true,
+      path: fileDir + "/download_" + Math.floor(date.getDate() + date.getSeconds()/2) + ".jpg",
+      description:'Fole Download'
+    }
+  })
+  .fetch('GET', 'https://i.pinimg.com/736x/f9/87/df/f987dfccfe88f125a742af67f232ebfe.jpg', {
+    //some headers ..
+  })
+  .then((res) => {
+    // the temp file path
+    console.log('The file saved to ', res.path())
+    ToastAndroid.show('File downloaded Successfully', ToastAndroid.SHORT);
+ 
+  })
+  }
+
+ const myShare = async () =>{
+
+  const shareOptions ={ 
+    message:'Download Islamimc Wallpaper App From Playstore ',
+    // url:imageShr,
+    // social:Share.Social.WHATSAPP
+   
+  }
+
+  try {
+    const ShareResponse = await Share.open(shareOptions);
+    console.log(JSON.stringify(shareOptions));
+  } catch (error) {
+    console.log('Error =>',error);
+  }
+ }
+
+
+ const shareWhatsapp = async (img) =>{
+  const shareOptions ={ 
+    message:'Download Islamimc Wallpaper App From Playstore',
+    url:img,
+    social:Share.Social.WHATSAPP
+   
+  }
+
+  try {
+    const ShareResponse = await Share.shareSingle(shareOptions);
+    console.log(JSON.stringify(shareOptions));
+  } catch (error) {
+    console.log('Error =>',error);
+  }
+ }
+
+ const renderItem = ({index,item}) => {
+  // console.log({item});
+  const backgroundColor = index === selectedId ? '#000' : '#ebebeb';
+  const color = index === selectedId ? 'white' : 'black';
+
+  return (
+    <Item
+      item={item}
+      onPress={() => setSelectedId(index)}
+      backgroundColor={backgroundColor}
+      textColor={color}
+    />
+  );
+};
+
+const Item = ({item, onPress, backgroundColor, textColor}) => (
+  <TouchableOpacity onPress={onPress} style={{backgroundColor,paddingHorizontal:responsiveWidth(4),marginHorizontal:responsiveWidth(1),paddingVertical:responsiveHeight(1),borderRadius:responsiveWidth(5)}}>
+    <Text style={{color: textColor,fontSize:responsiveFontSize(1.8),height:responsiveHeight(3),textAlign:'center'}}>{item}</Text>
+  </TouchableOpacity>
+);
+
   return (
     <View style={styles.mainContainer} >
-    <Image source={background} style={styles.bg} />
+    {/* <Image source={background} style={styles.bg} /> */}
        
        <Header/>
 
-       <View style={styles.optionsWrapper} >
+       {/* <View style={styles.optionsWrapper} >
        <FlatList
         
        horizontal
@@ -54,36 +168,50 @@ const Home = () => {
         }}
         keyExtractor={index => index}
       />
-       </View>
+       </View> */}
+
+        
+       <FlatList
+        style={{alignSelf:'center',marginTop:responsiveHeight(3)}}
+       horizontal
+       showsHorizontalScrollIndicator={false}
+        data={["Wallpaper","Habis","Status","Islamic","Video"]}
+        renderItem={renderItem}
+      
+        keyExtractor={index => index}
+      />
+ 
+
      
        <FlatList
       style={{marginTop:responsiveHeight(2),}}
        showsVerticalScrollIndicator={false}
         data={hadisData}
-        renderItem={({item}) => {
+        renderItem={({item,index}) => {
+          // console.log("size",(hadisData.length-1),index)
            return(
-            <View style={[styles.itemWrapper,{marginTop:responsiveHeight(2)}]} >
-              <ImageBackground source={item.img} style={styles.image} >
+            <View style={[styles.itemWrapper,{marginTop:responsiveHeight(2),marginBottom:(hadisData.length-1)===index && responsiveHeight(1)}]} >
+              <ImageBackground source={{uri:item.img}} style={styles.image} >
                     
                     <View style={styles.iconsWrapper} >
                         <View style={styles.leftIconWrapper}>
-                        <Icon onPress={() => { }} name="eye" size={responsiveWidth(5)} color={'#FFBB2E'} />
+                        <Icon name="eye" size={responsiveWidth(5)} color={'#ebebeb'} />
                         <Text style={{color:colors.black,fontWeight:'500',marginLeft:responsiveWidth(1)}} >211</Text>
-                        <Icon onPress={() => { }} name="share-social" size={responsiveWidth(5)} color={'#FFBB2E'} />
+                        <Icon name="share-social" size={responsiveWidth(5)} color={'#ebebeb'} />
                         <Text style={{color:colors.black,fontWeight:'500',marginLeft:responsiveWidth(1)}} >25</Text>
                         </View>
 
                         <View style={styles.rightIconWrapper}>
-                        <TouchableOpacity>
-                        <Icon onPress={() => { }} name="heart-outline" size={responsiveWidth(7)} color={'#fe0000'} />
+                        <TouchableOpacity onPress={()=>{navigation.navigate(NavigationString.Login)}}>
+                        <Icon  name="heart-outline" size={responsiveWidth(7)} color={'#fe0000'} />
                         </TouchableOpacity>
                         
-                        <TouchableOpacity>
-                        <Icon onPress={() => { }} name="share" size={responsiveWidth(7)} color={colors.themeText} />
+                        <TouchableOpacity onPress={()=>{myShare()}} >
+                        <Icon  name="share" size={responsiveWidth(7)} color={colors.themeText} />
                         </TouchableOpacity>
                         
-                        <TouchableOpacity>
-                        <Icon onPress={() => { }} name="logo-whatsapp" size={responsiveWidth(7)} color={'#25D366'} />
+                        <TouchableOpacity  onPress={()=>{shareWhatsapp(item.img)}} >
+                        <Icon name="logo-whatsapp" size={responsiveWidth(7)} color={'#25D366'} />
                         </TouchableOpacity>
                      
 
@@ -136,12 +264,20 @@ const styles = StyleSheet.create({
     },
     optionText:{
         color:colors.black,
-        marginHorizontal:responsiveWidth(2),
-        backgroundColor:'#FFBB2E',
-        paddingHorizontal:responsiveWidth(4),
-        paddingVertical:responsiveHeight(1.5),
-        borderRadius:responsiveWidth(6)
+       fontSize:responsiveFontSize(1.8),
+       height:responsiveHeight(3)
+    
+        // fontSize:responsiveFontSize(1.9)
     },
+    optionButtonWrapper:{
+          backgroundColor:'#ebebeb',
+          paddingHorizontal:responsiveWidth(5),
+          // paddingVertical:responsiveHeight(2),
+          marginHorizontal:responsiveWidth(1),
+          paddingVertical:responsiveHeight(1),
+          borderRadius:responsiveWidth(6)
+          
+    }, 
     image:{
          resizeMode:'stretch',
         width:'100%',
@@ -164,7 +300,8 @@ const styles = StyleSheet.create({
         flexDirection:'row',
         justifyContent:'space-between',
         paddingHorizontal:responsiveWidth(3),
-        alignItems:'center'
+        alignItems:'center',
+        paddingBottom:responsiveHeight(1)
     },
     leftIconWrapper:{
         flexDirection:'row',
@@ -172,7 +309,8 @@ const styles = StyleSheet.create({
     },
     rightIconWrapper:{
         flexDirection:'row',
-        gap:responsiveWidth(1)
+        gap:responsiveWidth(1),
+        
        
     }
 })
