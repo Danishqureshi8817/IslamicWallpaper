@@ -5,6 +5,9 @@ import {requestUserPermission, notificationListener} from './src/utiles/Notifica
 
 import Routes from './src/navigation/Routes';
 
+import store from './src/store/store';
+ 
+import { Provider } from 'react-redux';
 
 
 const App = () => {
@@ -22,8 +25,10 @@ const App = () => {
   
 
   return (
-
+<Provider  store={store} >
  <Routes/>
+ </Provider>
+
   )
 }
 

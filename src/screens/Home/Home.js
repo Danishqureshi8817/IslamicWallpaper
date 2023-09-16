@@ -14,11 +14,39 @@ import Share from 'react-native-share';
 import RNFetchBlob from 'rn-fetch-blob'
 import NavigationString from '../../contants/NavigationString'
 
+import { useDispatch, useSelector } from 'react-redux';
+
+import { getCategory } from '../../store/CategorySlice';
+import { wallpaperList } from '../../store/wallpaperSlice'
+import CallApi, {setToken ,CallApiJson } from '../../utiles/network'
 
 const Home = ({navigation}) => {
 
   const [selectedId, setSelectedId] = useState();
 
+  const dispatch = useDispatch();
+  const { categoryListData } = useSelector(state=>state.cat);
+  const { wallpaperListData } = useSelector(state=>state.wallPaper);
+
+
+  useEffect(
+
+    ()=>{
+ 
+     dispatch(getCategory())
+     dispatch(wallpaperList(1))
+
+      // fetch('https://fakestoreapi.com/products')
+      // .then(data=>data.json())
+      // .then(result => getlistData(result) )
+
+
+    }
+    ,[]
+  )
+
+  console.log( )
+ 
   const hadisData = [
     {
         id:'01',
@@ -126,7 +154,8 @@ const Home = ({navigation}) => {
  }
 
  const renderItem = ({index,item}) => {
-  // console.log({item});
+
+   // console.log('categoryListData in renderitem', categoryListData );
   const backgroundColor = index === selectedId ? '#000' : '#ebebeb';
   const color = index === selectedId ? 'white' : 'black';
 
