@@ -70,11 +70,12 @@ import CallApi, {setToken ,CallApiJson } from '../utiles/network';
       };
 
       
-    const result =  await CallApiJson('wallpapercategory', 'POST', body);
+    const result =  await CallApiJson('wallpaperlist', 'POST', body);
+    // console.log(result.wallpapers);
 
         // const data = await fetch( 'https://islamicwallpaper.newindiagyan.online/api/wallpapercategory');
         // const result = await data.json();
-         return result.category;
+         return result.wallpapers;
 
  }  )
 

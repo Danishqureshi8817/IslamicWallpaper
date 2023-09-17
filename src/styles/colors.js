@@ -14,6 +14,9 @@ export default {
     blackOpacity15:'rgba(0,0,0,0.15)',
     inputBorder:'rgba(0,0,0,0.08)',
     touchableHighlight:'rgba(0,0,0,0.05)',
+    shimmerColor1:'#564d4d',
+    shimmerColor2:'#8e8e8e',
+    shimmerColor3:'#564d4d',
    
  
  

@@ -4,7 +4,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 
 import {responsiveFontSize,responsiveHeight,responsiveWidth} from 'react-native-responsive-dimensions'
-import { Home } from '../screens';
+import { Home, Splash } from '../screens';
 import NavigationString from '../contants/NavigationString';
 import Login from '../screens/Login/Login';
 
@@ -43,9 +43,9 @@ const MainStack = () => {
     
 //    load()
 
-//     setTimeout( async () => {
-//       await splashStatus()
-//    }, 2000);
+    setTimeout( async () => {
+      await splashStatus()
+   }, 2000);
 
 
 
@@ -54,7 +54,7 @@ const MainStack = () => {
 
   return (
     <Stack.Navigator screenOptions={{headerShown:false,}} >
-     {/* {splashShow?<Stack.Screen name={navigationStrings.Splash} component={Splash}/>:null} */}
+     {splashShow?<Stack.Screen name={NavigationString.Splash} component={Splash}/>:null}
     
      {/* <Stack.Screen name='Tabs' component={TabStack}  /> */}
      {/* <Stack.Screen name={navigationStrings.Menu} component={Menu} options={{headerShown:true,}} /> */}

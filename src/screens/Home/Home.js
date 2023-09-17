@@ -8,7 +8,7 @@ import {
     responsiveHeight,
     responsiveWidth,
   } from 'react-native-responsive-dimensions';
-import { wWidht } from '../../styles/Dimensions'
+import { wHeight, wWidht } from '../../styles/Dimensions'
 import Icon from 'react-native-vector-icons/Ionicons';
 import Share from 'react-native-share';
 import RNFetchBlob from 'rn-fetch-blob'
@@ -19,10 +19,16 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getCategory } from '../../store/CategorySlice';
 import { wallpaperList } from '../../store/wallpaperSlice'
 import CallApi, {setToken ,CallApiJson } from '../../utiles/network'
+import LinearGradient from 'react-native-linear-gradient'
+import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder'
+import EmptyOption from '../../components/EmptyOption'
+
+const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient)
 
 const Home = ({navigation}) => {
 
   const [selectedId, setSelectedId] = useState();
+  const [Base64, setBase64] = useState('')
 
   const dispatch = useDispatch();
   const { categoryListData } = useSelector(state=>state.cat);
@@ -45,7 +51,7 @@ const Home = ({navigation}) => {
     ,[]
   )
 
-  console.log( )
+  // console.log('ctry', wallpaperListData[1].img_name )
  
   const hadisData = [
     {
@@ -68,7 +74,7 @@ const Home = ({navigation}) => {
 
   // const imageShr = ''
 
-  const requestStoragePermission = async () => {
+  const requestStoragePermission = async (imgUri) => {
     try {
       const granted = await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
@@ -83,7 +89,7 @@ const Home = ({navigation}) => {
         },
       );
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        downloadFile()
+        downloadFile(imgUri)
       } else {
         console.log('Storage permission denied');
       }
@@ -92,7 +98,7 @@ const Home = ({navigation}) => {
     }
   };
 
-  const downloadFile= () => {
+  const downloadFile= (uriImg) => {
         const {config,fs} = RNFetchBlob;
         const date = new Date()
         const fileDir = fs.dirs.DownloadDir;
@@ -105,25 +111,45 @@ const Home = ({navigation}) => {
       useDownloadManager:true,
       notification:true,
       path: fileDir + "/download_" + Math.floor(date.getDate() + date.getSeconds()/2) + ".jpg",
-      description:'Fole Download'
+      description:'Wallpapers Download'
     }
   })
-  .fetch('GET', 'https://i.pinimg.com/736x/f9/87/df/f987dfccfe88f125a742af67f232ebfe.jpg', {
+  .fetch('GET', `https://islamicwallpaper.newindiagyan.online/uploads/${uriImg}`, {
     //some headers ..
   })
   .then((res) => {
     // the temp file path
+    // res.base64().then((rr)=>{
+    //   console.log("Base64",rr);
+    // })
+    
     console.log('The file saved to ', res.path())
     ToastAndroid.show('File downloaded Successfully', ToastAndroid.SHORT);
  
   })
   }
 
- const myShare = async () =>{
+ const myShare = async (imgUri) =>{
+    
+  RNFetchBlob.fetch('GET', `https://islamicwallpaper.newindiagyan.online/uploads/${imgUri}`, {
+    //some headers ..
+  }).then(async(res) => {
+    // the temp file path
+    // res.base64().then((rr)=>{
+    //   console.log("Base64",rr);
+    // })
+    
+    // console.log('The file saved to ', res.base64())
+    // ToastAndroid.show('File downloaded Successfully', ToastAndroid.SHORT);
+   await setBase64(res.base64())
+   
+  })
+//  console.log('bas64',Base64);
+
 
   const shareOptions ={ 
     message:'Download Islamimc Wallpaper App From Playstore ',
-    // url:imageShr,
+    url:`data:image/jpeg;base64,${Base64}`,
     // social:Share.Social.WHATSAPP
    
   }
@@ -137,10 +163,26 @@ const Home = ({navigation}) => {
  }
 
 
- const shareWhatsapp = async (img) =>{
+ const shareWhatsapp = async (imgUri) =>{
+  
+  // let bse64='';
+  RNFetchBlob.fetch('GET', `https://islamicwallpaper.newindiagyan.online/uploads/${imgUri}`, {
+    //some headers ..
+  }).then(async(res) => {
+    // the temp file path
+    // res.base64().then((rr)=>{
+    //   console.log("Base64",rr);
+    // })
+    
+    // console.log('The file saved to ', res.base64())
+    // ToastAndroid.show('File downloaded Successfully', ToastAndroid.SHORT);
+   await setBase64(res.base64())
+   
+  })
+//  console.log('bas64',Base64);
   const shareOptions ={ 
     message:'Download Islamimc Wallpaper App From Playstore',
-    url:img,
+    url:`data:image/jpeg;base64,${Base64}`,
     social:Share.Social.WHATSAPP
    
   }
@@ -154,26 +196,63 @@ const Home = ({navigation}) => {
  }
 
  const renderItem = ({index,item}) => {
-
-   // console.log('categoryListData in renderitem', categoryListData );
+    
+  console.log('categoryListData in renderitem', index+1 );
   const backgroundColor = index === selectedId ? '#000' : '#ebebeb';
   const color = index === selectedId ? 'white' : 'black';
 
   return (
     <Item
-      item={item}
-      onPress={() => setSelectedId(index)}
+      name={item.name}
+      onPress={() => {
+        dispatch(wallpaperList(index+1))
+        setSelectedId(index)
+        }}
       backgroundColor={backgroundColor}
       textColor={color}
     />
   );
 };
 
-const Item = ({item, onPress, backgroundColor, textColor}) => (
-  <TouchableOpacity onPress={onPress} style={{backgroundColor,paddingHorizontal:responsiveWidth(4),marginHorizontal:responsiveWidth(1),paddingVertical:responsiveHeight(1),borderRadius:responsiveWidth(5)}}>
-    <Text style={{color: textColor,fontSize:responsiveFontSize(1.8),height:responsiveHeight(3),textAlign:'center'}}>{item}</Text>
+const Item = ({name, onPress, backgroundColor, textColor}) => (
+  <TouchableOpacity onPress={onPress} style={[styles.optionsWrapper,{backgroundColor}]}>
+    <Text style={[styles.optionText,{color:textColor}]}>{name}</Text>
   </TouchableOpacity>
+
 );
+
+
+
+const emptyItem = () => {
+
+  return (
+    <View style={{marginTop:responsiveHeight(2),gap:responsiveHeight(2)}}>
+    <ShimmerPlaceHolder 
+    style={{width:wWidht*0.9,height:responsiveHeight(30),alignSelf:'center',borderRadius:responsiveWidth(2)}}
+    shimmerColors={[colors.shimmerColor2,colors.shimmerColor2,colors.shimmerColor3]}
+    >
+      <Text style={{color:colors.white}} >Please Wait</Text>
+    </ShimmerPlaceHolder>
+
+    <ShimmerPlaceHolder 
+    style={{width:wWidht*0.9,height:responsiveHeight(30),alignSelf:'center',borderRadius:responsiveWidth(2)}}
+    shimmerColors={[colors.shimmerColor2,colors.shimmerColor2,colors.shimmerColor3]}
+    >
+
+    </ShimmerPlaceHolder>
+
+    <ShimmerPlaceHolder 
+    style={{width:wWidht*0.9,height:responsiveHeight(30),alignSelf:'center',borderRadius:responsiveWidth(2)}}
+    shimmerColors={[colors.shimmerColor2,colors.shimmerColor2,colors.shimmerColor3]}
+    >
+
+    </ShimmerPlaceHolder>
+    </View>
+
+
+
+  )
+}
 
   return (
     <View style={styles.mainContainer} >
@@ -204,10 +283,11 @@ const Item = ({item, onPress, backgroundColor, textColor}) => (
         style={{alignSelf:'center',marginTop:responsiveHeight(3)}}
        horizontal
        showsHorizontalScrollIndicator={false}
-        data={["Wallpaper","Habis","Status","Islamic","Video"]}
+        data={categoryListData}
         renderItem={renderItem}
+      //  ListEmptyComponent={EmptyOption}
       
-        keyExtractor={index => index}
+        keyExtractor={item => item.id}
       />
  
 
@@ -215,37 +295,46 @@ const Item = ({item, onPress, backgroundColor, textColor}) => (
        <FlatList
       style={{marginTop:responsiveHeight(2),}}
        showsVerticalScrollIndicator={false}
-        data={hadisData}
+        data={wallpaperListData}
+        ListEmptyComponent={emptyItem}
         renderItem={({item,index}) => {
           // console.log("size",(hadisData.length-1),index)
            return(
-            <View style={[styles.itemWrapper,{marginTop:responsiveHeight(2),marginBottom:(hadisData.length-1)===index && responsiveHeight(1)}]} >
-              <ImageBackground source={{uri:item.img}} style={styles.image} >
+            <View style={[styles.itemWrapper,{marginTop:responsiveHeight(2),marginBottom:(wallpaperListData.length-1)===index && responsiveHeight(1)}]} >
+              <ImageBackground source={{uri:`https://islamicwallpaper.newindiagyan.online/uploads/${item.img_name}`}} style={styles.image} >
                     
                     <View style={styles.iconsWrapper} >
                         <View style={styles.leftIconWrapper}>
                         <Icon name="eye" size={responsiveWidth(5)} color={'#ebebeb'} />
                         <Text style={{color:colors.black,fontWeight:'500',marginLeft:responsiveWidth(1)}} >211</Text>
-                        <Icon name="share-social" size={responsiveWidth(5)} color={'#ebebeb'} />
-                        <Text style={{color:colors.black,fontWeight:'500',marginLeft:responsiveWidth(1)}} >25</Text>
+                        {/* <Icon name="share-social" size={responsiveWidth(5)} color={'#ebebeb'} />
+                        <Text style={{color:colors.black,fontWeight:'500',marginLeft:responsiveWidth(1)}} >25</Text> */}
                         </View>
 
                         <View style={styles.rightIconWrapper}>
-                        <TouchableOpacity onPress={()=>{navigation.navigate(NavigationString.Login)}}>
-                        <Icon  name="heart-outline" size={responsiveWidth(7)} color={'#fe0000'} />
+                        <TouchableOpacity onPress={()=>{}}>
+                        <Icon  name="heart-outline" size={responsiveWidth(8)} color={'#fe0000'} />
                         </TouchableOpacity>
                         
-                        <TouchableOpacity onPress={()=>{myShare()}} >
-                        <Icon  name="share" size={responsiveWidth(7)} color={colors.themeText} />
+                        <TouchableOpacity onPress={()=>{myShare(item.img_name)}} >
+                        <Icon  name="share" size={responsiveWidth(8)} color={colors.white} />
                         </TouchableOpacity>
+{/* 
+                        <TouchableOpacity  onPress={()=>{requestStoragePermission(item.img_name)}} >
+                        <Icon name="cloud-download" size={responsiveWidth(7)} color={colors.themeText} />
+                        </TouchableOpacity> */}
                         
-                        <TouchableOpacity  onPress={()=>{shareWhatsapp(item.img)}} >
-                        <Icon name="logo-whatsapp" size={responsiveWidth(7)} color={'#25D366'} />
+                        <TouchableOpacity  onPress={()=>{shareWhatsapp(item.img_name)}} >
+                        <Icon name="logo-whatsapp" size={responsiveWidth(8)} color={'#25D366'} />
                         </TouchableOpacity>
                      
 
                         </View>
+                       
                     </View>
+                    <View style={{backgroundColor:'rgba(36,87,116,0.6)',width:'100%',height:responsiveHeight(4.5),position:'absolute'}} >
+
+                 </View>
               </ImageBackground>
             </View>
 
@@ -280,33 +369,32 @@ const styles = StyleSheet.create({
       
     },
     optionsWrapper:{
-        backgroundColor:colors.white,
-        marginHorizontal:responsiveWidth(5),
-        paddingVertical:responsiveHeight(0.5),
-        borderRadius:responsiveWidth(10),
-        marginTop:responsiveHeight(2.5),
-        paddingHorizontal:responsiveWidth(2),
-        overflow:'hidden'
-
+      paddingHorizontal:responsiveWidth(4),
+      marginHorizontal:responsiveWidth(1),
+      paddingVertical:responsiveHeight(1),
+      borderRadius:responsiveWidth(5),
+      height:wHeight*0.04,
+      marginBottom:responsiveHeight(2),
+      justifyContent:'center',
+      alignItems:'center'
 
     
     },
     optionText:{
-        color:colors.black,
-       fontSize:responsiveFontSize(1.8),
-       height:responsiveHeight(3)
-    
-        // fontSize:responsiveFontSize(1.9)
+ 
+      fontSize:responsiveFontSize(1.8),
+      height:responsiveHeight(3),
+      textAlign:'center'
     },
-    optionButtonWrapper:{
-          backgroundColor:'#ebebeb',
-          paddingHorizontal:responsiveWidth(5),
-          // paddingVertical:responsiveHeight(2),
-          marginHorizontal:responsiveWidth(1),
-          paddingVertical:responsiveHeight(1),
-          borderRadius:responsiveWidth(6)
+    // optionButtonWrapper:{
+    //       backgroundColor:'#ebebeb',
+    //       paddingHorizontal:responsiveWidth(5),
+    //       // paddingVertical:responsiveHeight(2),
+    //       marginHorizontal:responsiveWidth(1),
+    //       paddingVertical:responsiveHeight(1),
+    //       borderRadius:responsiveWidth(6)
           
-    }, 
+    // }, 
     image:{
          resizeMode:'stretch',
         width:'100%',
@@ -330,7 +418,9 @@ const styles = StyleSheet.create({
         justifyContent:'space-between',
         paddingHorizontal:responsiveWidth(3),
         alignItems:'center',
-        paddingBottom:responsiveHeight(1)
+        paddingBottom:responsiveHeight(0.5),
+        zIndex:5,
+        
     },
     leftIconWrapper:{
         flexDirection:'row',
@@ -338,7 +428,7 @@ const styles = StyleSheet.create({
     },
     rightIconWrapper:{
         flexDirection:'row',
-        gap:responsiveWidth(1),
+        gap:responsiveWidth(4),
         
        
     }
