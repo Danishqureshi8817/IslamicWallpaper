@@ -4,7 +4,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 
 import {responsiveFontSize,responsiveHeight,responsiveWidth} from 'react-native-responsive-dimensions'
-import { Home, Splash } from '../screens';
+import { Home, Splash, WallpaerSet } from '../screens';
 import NavigationString from '../contants/NavigationString';
 import Login from '../screens/Login/Login';
 
@@ -62,6 +62,7 @@ const MainStack = () => {
      <Stack.Screen name={navigationStrings.Otp} component={Otp} /> */}
      <Stack.Screen name={NavigationString.Home} component={Home} />
      <Stack.Screen name={NavigationString.Login} component={Login} />
+     <Stack.Screen name={NavigationString.WallpaperSet} component={WallpaerSet} />
     
      {/* <Stack.Screen name={navigationStrings.Login} component={Login} /> */}
      

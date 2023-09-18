@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View,Image,FlatList,ImageBackground,TouchableOpacity,Linking, PermissionsAndroid,ToastAndroid } from 'react-native'
+import { StyleSheet, Text, View,Image,FlatList,ImageBackground,TouchableOpacity,Linking, PermissionsAndroid,ToastAndroid,Pressable } from 'react-native'
 import React,{useState,useEffect} from 'react'
 import colors from '../../styles/colors'
 import { background } from '../../contants/imagePaths'
@@ -23,16 +23,22 @@ import LinearGradient from 'react-native-linear-gradient'
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder'
 import EmptyOption from '../../components/EmptyOption'
 
+
+
 const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient)
 
 const Home = ({navigation}) => {
 
   const [selectedId, setSelectedId] = useState();
-  const [Base64, setBase64] = useState('')
+  const [Base64, setBase64] = useState()
 
   const dispatch = useDispatch();
+
   const { categoryListData } = useSelector(state=>state.cat);
   const { wallpaperListData } = useSelector(state=>state.wallPaper);
+
+
+
 
 
   useEffect(
@@ -300,7 +306,7 @@ const emptyItem = () => {
         renderItem={({item,index}) => {
           // console.log("size",(hadisData.length-1),index)
            return(
-            <View style={[styles.itemWrapper,{marginTop:responsiveHeight(2),marginBottom:(wallpaperListData.length-1)===index && responsiveHeight(1)}]} >
+            <Pressable onPress={()=>{navigation.navigate(NavigationString.WallpaperSet,{imgUrl:item.img_name})}} style={[styles.itemWrapper,{marginTop:responsiveHeight(2),marginBottom:(wallpaperListData.length-1)===index && responsiveHeight(1)}]} >
               <ImageBackground source={{uri:`https://islamicwallpaper.newindiagyan.online/uploads/${item.img_name}`}} style={styles.image} >
                     
                     <View style={styles.iconsWrapper} >
@@ -336,7 +342,7 @@ const emptyItem = () => {
 
                  </View>
               </ImageBackground>
-            </View>
+            </Pressable>
 
             //   <Image source={item.img} />
            )
