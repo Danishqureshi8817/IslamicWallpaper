@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View,Pressable,Image,TouchableOpacity } from 'react-native'
+import { StyleSheet, Text, View,Pressable,Image,TouchableOpacity, Alert } from 'react-native'
 import React from 'react'
 import colors from '../../styles/colors'
 import { responsiveFontSize, responsiveHeight, responsiveWidth } from 'react-native-responsive-dimensions'
@@ -14,7 +14,27 @@ const WallpaperSet = ({navigation,route}) => {
 
     const setWallpaper = () => {
 
-        WallPaperManager.setWallpaper({uri: `https://islamicwallpaper.newindiagyan.online/uploads/${imgUrl}`, screen: 'home'}, res => console.log(res));
+        WallPaperManager.setWallpaper({uri: `https://islamicwallpaper.newindiagyan.online/uploads/${imgUrl}`, screen: 'home'},
+        
+        (res) => { console.log(res) ;
+
+            Alert.alert(
+                
+
+                'Success ',
+                'Wallpaper Set Successfully ',
+                [
+                   {text: 'Yes', onPress:  ()=>   {  navigation.navigate('Home') }   },
+                ],
+                { cancelable: false }
+
+            )
+
+        }
+        
+        
+        
+        );
     }
 
   return (
