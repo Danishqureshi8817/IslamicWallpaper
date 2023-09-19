@@ -33,7 +33,12 @@ const WallpaperSet = ({navigation,route}) => {
        <Text style={styles.headerText} > WallpaperSet </Text>
        </View>
 
-       <Image source={{uri:`https://islamicwallpaper.newindiagyan.online/uploads/${imgUrl}`}}  style={styles.wallpaperImg} />
+       <View style={styles.wallpaperWraper} >
+       <Image source={{uri:`https://islamicwallpaper.newindiagyan.online/uploads/${imgUrl}`}}  style={styles.wallpaperImg} /> 
+       </View>
+
+
+       {/* <Image source={{uri:`https://islamicwallpaper.newindiagyan.online/uploads/${imgUrl}`}}  style={styles.wallpaperImg} /> */}
 
        <TouchableOpacity onPress={()=>{setWallpaper()}} style={styles.buttonWrapper} >
            <Text style={styles.buttonText}>Set Wallpaper</Text>
@@ -70,13 +75,22 @@ const styles = StyleSheet.create({
         fontWeight:'500'
     },
     wallpaperImg:{
-        resizeMode:'contain',
+        resizeMode:'cover',
+        width:'100%',
+        height:'100%',
+        // alignSelf:'center',
+        // marginTop:responsiveHeight(10),
+        // borderRadius:responsiveWidth(2),
+        
+    },
+    wallpaperWraper:{
         width:wWidht*0.7,
         height:wHeight*0.6,
         alignSelf:'center',
         marginTop:responsiveHeight(10),
         borderRadius:responsiveWidth(2),
-        
+        overflow:'hidden',
+        elevation:5
     },
     buttonWrapper:{
         backgroundColor:colors.blackOpacity80,
