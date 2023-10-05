@@ -1,42 +1,35 @@
-import { StyleSheet, Text, View,Button,Animated } from 'react-native'
+import { StyleSheet, Text, View,Button,Animated,ImageBackground,Image,TouchableOpacity } from 'react-native'
 import React,{useRef,useState} from 'react'
+import imagePaths from '../../contants/imagePaths'
+import { wHeight, wWidht } from '../../styles/Dimensions'
+import colors from '../../styles/colors'
+import LinearGradient from 'react-native-linear-gradient'
+import { responsiveFontSize, responsiveHeight, responsiveWidth } from 'react-native-responsive-dimensions'
+import fontsName from '../../styles/fontsName'
+import NavigationString from '../../contants/NavigationString'
 
-const Login = () => {
 
-//     const animation = useRef(new Animated.Value(0)).current
-
-// const [btnClicked, setbtnClicked] = useState(false)
-//     const startAnimation = () => {
-
-//         Animated.spring(animation,{
-//             toValue: btnClicked ? 0 : 1,
-//             // duration:500, use with animated.timing
-//             useNativeDriver:true,
-
-//         }).start()
-//     }
-
+const Login = ({navigation}) => {
+ 
   return (
-    // <View style={{flex:1,justifyContent:'center',alignItems:'center'}} >
 
-    //   <Animated.View style={[{width:100,height:100,backgroundColor:'orange',marginBottom:20,borderRadius:btnClicked?50:0},{transform:[{translateY:animation.interpolate({
-    //     inputRange:[0,1],outputRange:[0,-100]
-    //   })},{rotate:animation.interpolate({
-    //     inputRange:[0,1],outputRange:['0deg','360deg']
-    //   })},{translateX:animation.interpolate({
-    //     inputRange:[0,1],outputRange:[0,150]
-    //   })},{scale:animation.interpolate({
-    //     inputRange:[0,1],outputRange:[1,0.5]
-    //   })}, ]}]}></Animated.View>
+    <ImageBackground source={imagePaths.loginBG} resizeMode='cover' style={{flex:1,width:wWidht,height:wHeight,backgroundColor:colors.white,alignItems:'center',justifyContent:'flex-end'}} >
+        <LinearGradient colors={[colors.whiteOpacity0,colors.whiteOpacity60,colors.white]} locations={[0.1,0.2,0.5]} style={{width:'100%',height:wHeight*0.6,alignItems:'center',}} >
+         
+           <Image source={imagePaths.logo} style={{resizeMode:'contain',width:responsiveWidth(22),height:responsiveHeight(11),marginTop:responsiveHeight(17),marginBottom:responsiveHeight(1)}} />     
+              <Text style={{color:colors.black,fontSize:responsiveFontSize(3),fontFamily:fontsName.PoppinsBold}} >Explore 4k </Text>
+              <Text style={{color:colors.black,fontSize:responsiveFontSize(3),fontFamily:fontsName.PoppinsBold}} >Islamic Wallpapers</Text>
 
-    //   <Button onPress={()=>{
-    //     setbtnClicked(!btnClicked)
-    //     startAnimation()}} title='Start Animation' />
-      
-    // </View>
-    <View>
-      <Text>Login</Text>
-    </View>
+              <Text style={{color:colors.black,fontSize:responsiveFontSize(1.7),fontFamily:fontsName.PoppinsLight,marginTop:responsiveHeight(1)}} >Explore, create, watch</Text>
+              <Text style={{color:colors.black,fontSize:responsiveFontSize(1.7),fontFamily:fontsName.PoppinsLight}}  >share 4k wallpapers.</Text>
+
+              <TouchableOpacity onPress={()=>{navigation.navigate(NavigationString.Home)}}  style={{backgroundColor:colors.exploreButton,marginTop:responsiveHeight(3),paddingVertical:responsiveHeight(1.6),paddingHorizontal:responsiveWidth(25),borderRadius:responsiveWidth(10),elevation:5}} >
+                 <Text style={{color:colors.white,fontSize:responsiveFontSize(1.8),fontFamily:fontsName.PoppinsMedium}} >Explore Now</Text>
+              </TouchableOpacity>
+
+
+        </LinearGradient>
+    </ImageBackground>
   )
 }
 

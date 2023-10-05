@@ -5,6 +5,11 @@ export default {
     grey:'#BABBC3',
     whiteText:'#ffffff',
     white:'#ffffff',
+    whiteOpacity0:'rgba(255,255,255, 0)',
+    whiteOpacity10:'rgba(255,255,255, 0.1)',
+    whiteOpacity20:'rgba(255,255,255, 0.2)',
+    whiteOpacity30:'rgba(255,255,255, 0.3)',
+    whiteOpacity60:'rgba(255,255,255, 0.6)',
     black:'rgba(0,0,0,1)',
     blackOpacity50:'rgba(0,0,0,0.5)',
     blackOpacity80:'rgba(0,0,0,0.8)',
@@ -17,6 +22,7 @@ export default {
     shimmerColor1:'#564d4d',
     shimmerColor2:'#8e8e8e',
     shimmerColor3:'#564d4d',
+    exploreButton:'#1E1E1E',
    
  
  

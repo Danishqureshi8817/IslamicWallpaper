@@ -60,8 +60,9 @@ const MainStack = () => {
      {/* <Stack.Screen name={navigationStrings.Menu} component={Menu} options={{headerShown:true,}} /> */}
      {/* <Stack.Screen name={navigationStrings.Login} component={Login} />
      <Stack.Screen name={navigationStrings.Otp} component={Otp} /> */}
-     <Stack.Screen name={NavigationString.Home} component={Home} />
      <Stack.Screen name={NavigationString.Login} component={Login} />
+     <Stack.Screen name={NavigationString.Home} component={Home} />
+
      <Stack.Screen name={NavigationString.WallpaperSet} component={WallpaerSet} />
     
      {/* <Stack.Screen name={navigationStrings.Login} component={Login} /> */}
