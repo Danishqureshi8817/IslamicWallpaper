@@ -3,5 +3,7 @@ export default {
     Login:"Login",
     Home:"Home",
     WallpaperSet:'WallpaperSet',
+    ShortVideo:'ShortVideo',
+    Quotes:'Quotes',
 
 }

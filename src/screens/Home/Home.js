@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View,Image,FlatList,ImageBackground,TouchableOpacity,Linking, PermissionsAndroid,ToastAndroid,Pressable } from 'react-native'
 import React,{useState,useEffect} from 'react'
 import colors from '../../styles/colors'
-import { background } from '../../contants/imagePaths'
+
 import Header from '../../components/Header'
 import {
     responsiveFontSize,
@@ -22,6 +22,8 @@ import CallApi, {setToken ,CallApiJson } from '../../utiles/network'
 import LinearGradient from 'react-native-linear-gradient'
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder'
 import EmptyOption from '../../components/EmptyOption'
+import fontsName from '../../styles/fontsName';
+import imagePaths from '../../contants/imagePaths';
 
 
 
@@ -203,13 +205,14 @@ const Home = ({navigation}) => {
 
  const renderItem = ({index,item}) => {
     
-  console.log('categoryListData in renderitem', index+1 );
+  console.log('categoryListData in renderitem',  );
   const backgroundColor = index === selectedId ? '#000' : '#ebebeb';
-  const color = index === selectedId ? 'white' : 'black';
+  const color = index === selectedId ? '#FF7A00' : 'black';
 
   return (
     <Item
       name={item.name}
+      img = {item.img}
       onPress={() => {
         dispatch(wallpaperList(index+1))
         setSelectedId(index)
@@ -220,10 +223,21 @@ const Home = ({navigation}) => {
   );
 };
 
-const Item = ({name, onPress, backgroundColor, textColor}) => (
-  <TouchableOpacity onPress={onPress} style={[styles.optionsWrapper,{backgroundColor}]}>
-    <Text style={[styles.optionText,{color:textColor}]}>{name}</Text>
+const Item = ({name, img,onPress, backgroundColor, textColor}) => (
+
+  <View style={[styles.optionsWrapper]}>
+    
+
+    <TouchableOpacity onPress={onPress} >
+
+      <Image source={{uri:`https://islamicwallpaper.newindiagyan.online/uploads/${img}`}} style={styles.optionIcon}  /> 
+
   </TouchableOpacity>
+    <Text style={[styles.optionText,{color:textColor}]}>{name}</Text>
+
+
+  </View>
+
 
 );
 
@@ -232,27 +246,67 @@ const Item = ({name, onPress, backgroundColor, textColor}) => (
 const emptyItem = () => {
 
   return (
-    <View style={{marginTop:responsiveHeight(2),gap:responsiveHeight(2)}}>
+    <View style={{marginTop:responsiveHeight(2),gap:responsiveHeight(2),}}>
+
+    <View style={{flexDirection:'row',gap:responsiveWidth(3)}} >
+      
     <ShimmerPlaceHolder 
-    style={{width:wWidht*0.9,height:responsiveHeight(30),alignSelf:'center',borderRadius:responsiveWidth(2)}}
+    style={{width:wWidht*0.44,height:responsiveHeight(30),alignSelf:'center',borderRadius:responsiveWidth(2)}}
     shimmerColors={[colors.shimmerColor2,colors.shimmerColor2,colors.shimmerColor3]}
     >
       <Text style={{color:colors.white}} >Please Wait</Text>
     </ShimmerPlaceHolder>
 
     <ShimmerPlaceHolder 
-    style={{width:wWidht*0.9,height:responsiveHeight(30),alignSelf:'center',borderRadius:responsiveWidth(2)}}
+    style={{width:wWidht*0.44,height:responsiveHeight(30),alignSelf:'center',borderRadius:responsiveWidth(2)}}
     shimmerColors={[colors.shimmerColor2,colors.shimmerColor2,colors.shimmerColor3]}
     >
 
     </ShimmerPlaceHolder>
 
-    <ShimmerPlaceHolder 
-    style={{width:wWidht*0.9,height:responsiveHeight(30),alignSelf:'center',borderRadius:responsiveWidth(2)}}
-    shimmerColors={[colors.shimmerColor2,colors.shimmerColor2,colors.shimmerColor3]}
-    >
 
-    </ShimmerPlaceHolder>
+    </View>
+
+    <View style={{flexDirection:'row',gap:responsiveWidth(3)}} >
+      
+      <ShimmerPlaceHolder 
+      style={{width:wWidht*0.44,height:responsiveHeight(30),alignSelf:'center',borderRadius:responsiveWidth(2)}}
+      shimmerColors={[colors.shimmerColor2,colors.shimmerColor2,colors.shimmerColor3]}
+      >
+        <Text style={{color:colors.white}} >Please Wait</Text>
+      </ShimmerPlaceHolder>
+  
+      <ShimmerPlaceHolder 
+      style={{width:wWidht*0.44,height:responsiveHeight(30),alignSelf:'center',borderRadius:responsiveWidth(2)}}
+      shimmerColors={[colors.shimmerColor2,colors.shimmerColor2,colors.shimmerColor3]}
+      >
+  
+      </ShimmerPlaceHolder>
+  
+  
+      </View>
+
+      <View style={{flexDirection:'row',gap:responsiveWidth(3)}} >
+      
+      <ShimmerPlaceHolder 
+      style={{width:wWidht*0.44,height:responsiveHeight(30),alignSelf:'center',borderRadius:responsiveWidth(2)}}
+      shimmerColors={[colors.shimmerColor2,colors.shimmerColor2,colors.shimmerColor3]}
+      >
+        <Text style={{color:colors.white}} >Please Wait</Text>
+      </ShimmerPlaceHolder>
+  
+      <ShimmerPlaceHolder 
+      style={{width:wWidht*0.44,height:responsiveHeight(30),alignSelf:'center',borderRadius:responsiveWidth(2)}}
+      shimmerColors={[colors.shimmerColor2,colors.shimmerColor2,colors.shimmerColor3]}
+      >
+  
+      </ShimmerPlaceHolder>
+  
+  
+      </View>
+
+ 
+    
     </View>
 
 
@@ -262,7 +316,7 @@ const emptyItem = () => {
 
   return (
     <View style={styles.mainContainer} >
-    {/* <Image source={background} style={styles.bg} /> */}
+
        
        <Header/>
 
@@ -286,7 +340,7 @@ const emptyItem = () => {
 
         
        <FlatList
-        style={{alignSelf:'center',marginTop:responsiveHeight(3)}}
+        style={{alignSelf:'center',marginTop:responsiveHeight(2)}}
        horizontal
        showsHorizontalScrollIndicator={false}
         data={categoryListData}
@@ -299,48 +353,60 @@ const emptyItem = () => {
 
      
        <FlatList
-      style={{marginTop:responsiveHeight(2),}}
+      style={{marginTop:responsiveHeight(1.5),alignSelf:'center'}}
        showsVerticalScrollIndicator={false}
+       numColumns={2}
         data={wallpaperListData}
         ListEmptyComponent={emptyItem}
         renderItem={({item,index}) => {
           // console.log("size",(hadisData.length-1),index)
            return(
-            <Pressable onPress={()=>{navigation.navigate(NavigationString.WallpaperSet,{imgUrl:item.img_name})}} style={[styles.itemWrapper,{marginTop:responsiveHeight(2),marginBottom:(wallpaperListData.length-1)===index && responsiveHeight(1)}]} >
-              <ImageBackground source={{uri:`https://islamicwallpaper.newindiagyan.online/uploads/${item.img_name}`}} style={styles.image} >
+            <Pressable onPress={()=>{navigation.navigate(NavigationString.WallpaperSet,{imgUrl:item.img_name})}} style={[styles.itemWrapper,{marginTop:(index!=0 && index != 1) &&responsiveHeight(2),marginRight:index%2 == 0 && responsiveWidth(3)}]} >
+              <ImageBackground source={{uri:`https://islamicwallpaper.newindiagyan.online/uploads/${item.img_name}`}} style={[styles.image,{justifyContent:index%2 == 0?'space-between':'flex-end'}]} >
+                    
+          {  index%2 == 0 &&        <View style={styles.trendingWrapper} >
+                      <Image source={imagePaths.fire} style={{resizeMode:'contain',width:responsiveWidth(4),height:responsiveHeight(1.8),marginLeft:responsiveWidth(0.8)}} />
+                      <Text style={{color:'#FF7A00',fontSize:responsiveFontSize(1),fontFamily:fontsName.PoppinsLight,alignSelf:'center',fontWeight:'500'}} >Trending</Text>
+                    </View>}
+                
                     
                     <View style={styles.iconsWrapper} >
                         <View style={styles.leftIconWrapper}>
-                        <Icon name="eye" size={responsiveWidth(5)} color={'#ebebeb'} />
-                        <Text style={{color:colors.black,fontWeight:'500',marginLeft:responsiveWidth(1)}} >211</Text>
+                        {/* <Icon name="eye" size={responsiveWidth(5)} color={'#ebebeb'} /> */}
+                        <Text style={{color:colors.white,marginLeft:responsiveWidth(1),fontSize:responsiveFontSize(1.4),fontFamily:fontsName.PoppinsRegular}} >211</Text>
+
+                        <Text style={{color:colors.white,marginLeft:responsiveWidth(1),fontSize:responsiveFontSize(1.4),fontFamily:fontsName.PoppinsRegular}} >Views</Text>
+
                         {/* <Icon name="share-social" size={responsiveWidth(5)} color={'#ebebeb'} />
                         <Text style={{color:colors.black,fontWeight:'500',marginLeft:responsiveWidth(1)}} >25</Text> */}
                         </View>
 
                         <View style={styles.rightIconWrapper}>
-                        <TouchableOpacity onPress={()=>{}}>
-                        <Icon  name="heart-outline" size={responsiveWidth(8)} color={'#fe0000'} />
+                        <TouchableOpacity onPress={()=>{}} style={styles.iconCircle} >
+                        <Icon  name="paper-plane-outline" size={responsiveWidth(3.5)} color={'#FFFFFF'} />
+                        
                         </TouchableOpacity>
                         
-                        <TouchableOpacity onPress={()=>{myShare(item.img_name)}} >
-                        <Icon  name="share" size={responsiveWidth(8)} color={colors.white} />
+                        <TouchableOpacity onPress={()=>{}} style={styles.iconCircle} >
+                        <Icon  name="heart-outline" size={responsiveWidth(3.5)} color={'#FFFFFF'} />
+                        
                         </TouchableOpacity>
 {/* 
                         <TouchableOpacity  onPress={()=>{requestStoragePermission(item.img_name)}} >
                         <Icon name="cloud-download" size={responsiveWidth(7)} color={colors.themeText} />
                         </TouchableOpacity> */}
                         
-                        <TouchableOpacity  onPress={()=>{shareWhatsapp(item.img_name)}} >
+                        {/* <TouchableOpacity  onPress={()=>{shareWhatsapp(item.img_name)}} >
                         <Icon name="logo-whatsapp" size={responsiveWidth(8)} color={'#25D366'} />
                         </TouchableOpacity>
-                     
+                      */}
 
                         </View>
                        
                     </View>
-                    <View style={{backgroundColor:'rgba(36,87,116,0.6)',width:'100%',height:responsiveHeight(4.5),position:'absolute'}} >
+                    {/* <View style={{backgroundColor:'rgba(36,87,116,0.6)',width:'100%',height:responsiveHeight(4.5),position:'absolute'}} >
 
-                 </View>
+                 </View> */}
               </ImageBackground>
             </Pressable>
 
@@ -375,22 +441,30 @@ const styles = StyleSheet.create({
       
     },
     optionsWrapper:{
-      paddingHorizontal:responsiveWidth(4),
-      marginHorizontal:responsiveWidth(1),
-      paddingVertical:responsiveHeight(1),
-      borderRadius:responsiveWidth(5),
-      height:wHeight*0.04,
+      // paddingHorizontal:responsiveWidth(1),
+      marginHorizontal:responsiveWidth(2),
+      // paddingVertical:responsiveHeight(3),
+      // borderRadius:responsiveWidth(5),
+      height:wHeight*0.1,
       marginBottom:responsiveHeight(2),
       justifyContent:'center',
-      alignItems:'center'
+      alignItems:'center',
+   
 
     
     },
     optionText:{
  
-      fontSize:responsiveFontSize(1.8),
+      fontSize:responsiveFontSize(1.4),
       height:responsiveHeight(3),
-      textAlign:'center'
+      textAlign:'center',
+      fontFamily:fontsName.PoppinsLight
+
+    },
+    optionIcon:{
+       resizeMode:'contain',
+       width:responsiveWidth(16),
+       height:responsiveHeight(8)
     },
     // optionButtonWrapper:{
     //       backgroundColor:'#ebebeb',
@@ -404,28 +478,31 @@ const styles = StyleSheet.create({
     image:{
          resizeMode:'stretch',
         width:'100%',
-         height:responsiveHeight(30),
+         height:responsiveHeight(34),
          alignSelf:'center',
-         justifyContent:'flex-end'
+         
 
          
     },
     itemWrapper:{
         // marginVertical:responsiveHeight(1)
-        borderRadius:responsiveWidth(2),
-      
-        width:wWidht*0.9,
+        borderRadius:responsiveWidth(4),
+        
+        width:wWidht*0.44,
         alignSelf:'center',
         overflow:'hidden',
-        elevation:10
+        elevation:3,
+        
     },
     iconsWrapper:{
         flexDirection:'row',
         justifyContent:'space-between',
         paddingHorizontal:responsiveWidth(3),
         alignItems:'center',
-        paddingBottom:responsiveHeight(0.5),
+        // paddingBottom:responsiveHeight(0.5),
         zIndex:5,
+        width:'100%',
+        marginBottom:responsiveHeight(1.5)
         
     },
     leftIconWrapper:{
@@ -434,8 +511,28 @@ const styles = StyleSheet.create({
     },
     rightIconWrapper:{
         flexDirection:'row',
-        gap:responsiveWidth(4),
+        gap:responsiveWidth(2),
         
        
+    },
+    iconCircle:{
+      borderColor:colors.white,
+      borderWidth:1,
+      borderRadius:responsiveWidth(14),
+      justifyContent:'center',
+      alignItems:'center',
+      paddingHorizontal:responsiveWidth(1.2),
+      paddingVertical:responsiveHeight(0.5)
+    },
+    trendingWrapper:{
+      flexDirection:'row',
+      alignItems:'center',
+      backgroundColor:colors.white,
+      width:'40%',
+      marginTop:responsiveHeight(1.5),
+      borderRadius:responsiveWidth(5),
+      marginLeft:responsiveWidth(2),
+      paddingVertical:responsiveHeight(0.2)
+      
     }
 })

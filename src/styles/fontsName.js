@@ -4,6 +4,7 @@ export default fonts = {
     PoppinsLight:'Poppins-Light',
     PoppinsRegular:'Poppins-Regular',
     PoppinsMedium:'Poppins-Medium',
+    PoppinsSemiBold:'Poppins-SemiBold',
 
 
 }

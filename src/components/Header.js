@@ -8,14 +8,15 @@ import {
     responsiveHeight,
     responsiveWidth,
   } from 'react-native-responsive-dimensions';
-import { avtar } from '../contants/imagePaths';
+import imagePaths, { avtar } from '../contants/imagePaths';
 
 const Header = () => {
   return (
     <View style={styles.headerWrapper} >
 
     <View style={styles.headerSubWrapper} >
-        <Icon onPress={() => { }} name="menu" size={responsiveWidth(7)} color={colors.black} />
+        {/* <Icon onPress={() => { }} name="menu" size={responsiveWidth(7)} color={colors.black} /> */}
+        <Image source={imagePaths.menuIcon}  style={styles.menuIcon} />
         <Text style={styles.heading} >Islamic Wallpaper</Text>
     </View>    
         <Image source={avtar} style={styles.avtar}/>
@@ -53,6 +54,11 @@ const styles = StyleSheet.create({
         alignItems:'center',
         gap:responsiveWidth(5)
     },
- 
+    menuIcon:{
+        resizeMode:'contain',
+        width:responsiveWidth(7),
+        height:responsiveHeight(3.5),
+        
+    }
     
 })

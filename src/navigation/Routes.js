@@ -5,6 +5,7 @@ import MainStack from './MainStack';
 
 
 
+
 const Routes = () => {
 
     // const {userData,setUserData} = useContext(AuthContext)
@@ -17,6 +18,8 @@ const Routes = () => {
   
        {/* {AuthStack()} */}
       {MainStack()}
+
+      
 
      </NavigationContainer>
     )

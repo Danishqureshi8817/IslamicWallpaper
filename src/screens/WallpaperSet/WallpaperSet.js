@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View,Pressable,Image,TouchableOpacity, Alert } from 'react-native'
-import React from 'react'
+import { StyleSheet, Text, View,Pressable,Image,TouchableOpacity, Alert,ImageBackground,ActivityIndicator } from 'react-native'
+import React,{useState} from 'react'
 import colors from '../../styles/colors'
 import { responsiveFontSize, responsiveHeight, responsiveWidth } from 'react-native-responsive-dimensions'
 import { wHeight, wWidht } from '../../styles/Dimensions'
@@ -10,13 +10,18 @@ const WallpaperSet = ({navigation,route}) => {
 
     const {imgUrl} = route.params;
 
+    const [process, setProcess] = useState(false)
+
     // console.log({imgUrl});
 
     const setWallpaper = () => {
+        setProcess(true)
 
         WallPaperManager.setWallpaper({uri: `https://islamicwallpaper.newindiagyan.online/uploads/${imgUrl}`, screen: 'home'},
         
         (res) => { console.log(res) ;
+
+            setProcess(false)
 
             Alert.alert(
                 
@@ -40,7 +45,7 @@ const WallpaperSet = ({navigation,route}) => {
   return (
     <View style={styles.mainContainer} >
        
-       <View style={styles.headerWrapper} >
+       {/* <View style={styles.headerWrapper} >
        <Pressable onPress={()=>{navigation.goBack()}} >
        <Icon
           name="arrow-back-outline"
@@ -50,19 +55,34 @@ const WallpaperSet = ({navigation,route}) => {
      
        </Pressable>
 
-       <Text style={styles.headerText} > WallpaperSet </Text>
-       </View>
+       <Text style={styles.headerText} > Wallpaper </Text>
+       </View> */}
 
        <View style={styles.wallpaperWraper} >
-       <Image source={{uri:`https://islamicwallpaper.newindiagyan.online/uploads/${imgUrl}`}}  style={styles.wallpaperImg} /> 
+       <ImageBackground source={{uri:`https://islamicwallpaper.newindiagyan.online/uploads/${imgUrl}`}}  style={styles.wallpaperImg} > 
+       <Pressable onPress={()=>{navigation.goBack()}} style={{marginBottom:responsiveHeight(30),marginLeft:responsiveWidth(2)}} >
+       <Icon
+          name="arrow-back-outline"
+          size={responsiveWidth(7)}
+          color={colors.white}
+        /> 
+     
+       </Pressable>
+
+        <ActivityIndicator size='large' animating={process} color='#FF7A00' style={{alignSelf:'center',marginBottom:responsiveHeight(45)}} />
+          
+
+       <TouchableOpacity onPress={()=>{setWallpaper()}} style={styles.buttonWrapper} >
+           <Text style={styles.buttonText}>Set as Wallpaper</Text>
+       </TouchableOpacity>
+
+       </ImageBackground>
        </View>
 
 
        {/* <Image source={{uri:`https://islamicwallpaper.newindiagyan.online/uploads/${imgUrl}`}}  style={styles.wallpaperImg} /> */}
 
-       <TouchableOpacity onPress={()=>{setWallpaper()}} style={styles.buttonWrapper} >
-           <Text style={styles.buttonText}>Set Wallpaper</Text>
-       </TouchableOpacity>
+    
 
     </View>
   )
@@ -98,27 +118,30 @@ const styles = StyleSheet.create({
         resizeMode:'cover',
         width:'100%',
         height:'100%',
+         justifyContent:'flex-end'
         // alignSelf:'center',
         // marginTop:responsiveHeight(10),
         // borderRadius:responsiveWidth(2),
         
     },
     wallpaperWraper:{
-        width:wWidht*0.7,
-        height:wHeight*0.6,
-        alignSelf:'center',
-        marginTop:responsiveHeight(10),
-        borderRadius:responsiveWidth(2),
-        overflow:'hidden',
-        elevation:5
+        width:wWidht,
+        height:wHeight,
+        // alignSelf:'center',
+        // marginTop:responsiveHeight(10),
+        // borderRadius:responsiveWidth(2),
+        // overflow:'hidden',
+        // elevation:5
     },
     buttonWrapper:{
-        backgroundColor:colors.blackOpacity80,
+        backgroundColor:colors.black,
         alignSelf:'center',
         paddingHorizontal:responsiveWidth(20),
         paddingVertical:responsiveHeight(1.5),
         borderRadius:responsiveWidth(2),
-        marginTop:responsiveHeight(4),
+        marginBottom:responsiveHeight(10),
+        elevation:5
+        // marginTop:responsiveHeight(4),
     },
     buttonText:{
         color:colors.whiteText,
