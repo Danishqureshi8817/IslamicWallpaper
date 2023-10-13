@@ -24,6 +24,7 @@ import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder'
 import EmptyOption from '../../components/EmptyOption'
 import fontsName from '../../styles/fontsName';
 import imagePaths from '../../contants/imagePaths';
+import { log } from 'react-native-reanimated';
 
 
 
@@ -39,16 +40,16 @@ const Home = ({navigation}) => {
   const { categoryListData } = useSelector(state=>state.cat);
   const { wallpaperListData } = useSelector(state=>state.wallPaper);
 
+//  console.log({navigation});
 
-
-
+// console.log('cca',categoryListData[0].id);
 
   useEffect(
 
     ()=>{
  
-     dispatch(getCategory())
-     dispatch(wallpaperList(1))
+     dispatch(getCategory('wallpaper'))
+     dispatch(wallpaperList(categoryListData[0]?.id))
 
       // fetch('https://fakestoreapi.com/products')
       // .then(data=>data.json())
@@ -205,16 +206,16 @@ const Home = ({navigation}) => {
 
  const renderItem = ({index,item}) => {
     
-  console.log('categoryListData in renderitem',  );
+  // console.log('categoryListData in renderitem',  );
   const backgroundColor = index === selectedId ? '#000' : '#ebebeb';
   const color = index === selectedId ? '#FF7A00' : 'black';
 
   return (
     <Item
-      name={item.name}
-      img = {item.img}
+      name={item?.name}
+      img = {item?.img}
       onPress={() => {
-        dispatch(wallpaperList(index+1))
+        dispatch(wallpaperList(item?.id))
         setSelectedId(index)
         }}
       backgroundColor={backgroundColor}
@@ -318,7 +319,7 @@ const emptyItem = () => {
     <View style={styles.mainContainer} >
 
        
-       <Header/>
+       <Header openDrawer={()=> navigation.openDrawer()} headerName={'Islamic Wallpaper'} optionStyles={{borderBottomWidth:1,borderBottomColor:colors.blackOpacity15}} />
 
        {/* <View style={styles.optionsWrapper} >
        <FlatList

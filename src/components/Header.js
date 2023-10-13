@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View,Image,TouchableOpacity } from 'react-native'
+import { StyleSheet, Text, View,Image,TouchableOpacity,Pressable } from 'react-native'
 import React from 'react'
 
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -9,17 +9,22 @@ import {
     responsiveWidth,
   } from 'react-native-responsive-dimensions';
 import imagePaths, { avtar } from '../contants/imagePaths';
+import fontsName from '../styles/fontsName';
 
-const Header = () => {
+const Header = ({openDrawer,headerName,optionStyles}) => {
   return (
-    <View style={styles.headerWrapper} >
+    <View style={[styles.headerWrapper,{...optionStyles}]} >
 
     <View style={styles.headerSubWrapper} >
         {/* <Icon onPress={() => { }} name="menu" size={responsiveWidth(7)} color={colors.black} /> */}
-        <Image source={imagePaths.menuIcon}  style={styles.menuIcon} />
-        <Text style={styles.heading} >Islamic Wallpaper</Text>
+        <TouchableOpacity onPress={openDrawer} >
+        <Image source={imagePaths.menuIcon}   style={styles.menuIcon} />
+
+        </TouchableOpacity>
+  
+        <Text style={styles.heading} >{headerName }</Text>
     </View>    
-        <Image source={avtar} style={styles.avtar}/>
+        <Image source={imagePaths.man} style={styles.avtar}/>
 
 
     
@@ -37,17 +42,20 @@ const styles = StyleSheet.create({
         alignItems:'center',
         justifyContent:'space-between',
         paddingHorizontal:responsiveWidth(2),
-        paddingTop:responsiveHeight(1)
+        paddingTop:responsiveHeight(1),
+       
+        paddingBottom:responsiveHeight(1)
     },
     heading:{
         color:colors.black,
         fontSize:responsiveFontSize(2.2),
-        fontWeight:'600'
+        fontWeight:'bold',
+        fontFamily:fontsName.PoppinsSemiBold
     },
     avtar:{
         resizeMode:'contain',
-        width:responsiveWidth(15),
-        height:responsiveHeight(4)
+        width:responsiveWidth(18),
+        height:responsiveHeight(5)
     },
     headerSubWrapper:{
         flexDirection:'row',

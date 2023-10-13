@@ -55,10 +55,11 @@ import CallApi, {setToken ,CallApiJson } from '../utiles/network';
 
 // RTQ API REDUX TOP ->
 
- export const getCategory = createAsyncThunk('category', async()=>{
+ export const getCategory = createAsyncThunk('category', async(type)=>{
      
     const body = {
-        app_name: 'ISLAMICAPP'
+        app_name: 'ISLAMICAPP',
+        type:type
       };
 
       
