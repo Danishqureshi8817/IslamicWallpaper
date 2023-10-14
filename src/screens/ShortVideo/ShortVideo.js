@@ -16,6 +16,16 @@ import { CallApiJson } from '../../utiles/network'
 const ShortVideo = ({navigation}) => {
 
    
+  const [categoryListData, setCategoryList] = useState()
+  const [shortVideos, setShortVideos] = useState()
+  // const { categoryListData } = useSelector(state=>state.cat);
+  // const { wallpaperListData } = useSelector(state=>state.wallPaper);
+
+
+  const [selectedId, setSelectedId] = useState();
+ // const [shortVideos, setShortVideos] = useState()
+  
+
    const shortVideoData = [
     {  
        id:'01',
@@ -73,19 +83,12 @@ const ShortVideo = ({navigation}) => {
 },
    ]
 
-  const [selectedId, setSelectedId] = useState();
-  const [shortVideos, setShortVideos] = useState()
-  
 
   const dispatch = useDispatch();
 
-  const { categoryListData } = useSelector(state=>state.cat);
-  const { wallpaperListData } = useSelector(state=>state.wallPaper);
 
 
-
-   console.log(categoryListData[0]?.id);
-
+ 
   const fetchShortVideos = async(catId) =>{
     
     const body = {
@@ -94,20 +97,51 @@ const ShortVideo = ({navigation}) => {
     };
     const result =  await CallApiJson('wallpaperlist', 'POST', body);
 
-      console.log('shortvideo Data',result.wallpapers);
      await setShortVideos(result?.wallpapers)
   }
 
    
-  const fetchCategory = async () => {
+  // const fetchCategory = async () => {
          
-    await dispatch(getCategory('short'))
+  //   await dispatch(getCategory('short'))
    
-    if(categoryListData != null){
-      fetchShortVideos(8)
-    }
+  //   if(categoryListData != null){
+  //     fetchShortVideos(8)
+  //   }
     
-  }
+  // }
+
+  const  fetchCategory =  async()=>{
+
+
+    const body = {
+      app_name: 'ISLAMICAPP',
+      type:'short'
+    };
+    
+    
+    const listCat = await CallApiJson('wallpapercategory', 'POST',body);
+
+    setCategoryList( listCat.category)
+    fetchWallpaper( listCat.category[0]?.id )
+     //dispatch(wallpaperList(listCat.category[0]?.id))
+    //
+    } 
+    
+    
+    const  fetchWallpaper =  async(cat_id)=>{
+    
+    const body = {
+      app_name: 'ISLAMICAPP',
+      cat_id: cat_id
+    };
+    
+    const listWall = await CallApiJson('wallpaperlist', 'POST',body);
+
+    setShortVideos( listWall.wallpapers);
+    
+    
+    } 
 
 
   useEffect(()=>{
@@ -131,7 +165,6 @@ const ShortVideo = ({navigation}) => {
 
   const shortVideoListItem = ({index,item}) => {
     
-    // console.log('categoryListData in Short', item );
     const backgroundColor = index === selectedId ? '#ffffff' : '#000000';
     const color = index === selectedId ? '#000000' : 'white';
   
@@ -180,13 +213,12 @@ const ShortVideo = ({navigation}) => {
 //   //   console.log("Thumbnails",data.images[0])});
 //  }
 //  datathum()
- console.log(item?.thumb);
 
        return (
         <View style={[styles.shortVideoWrapper,{marginBottom:leg==index?0:responsiveHeight(1)}]} >
 
            <TouchableOpacity onPress={()=>{navigation.navigate(NavigationString.YoutubePlayers)}} >
-           <Image source={{uri:`http://img.youtube.com/vi/qNW5STDw67c/default.jpg`}} style={styles.shortVideoImg} />
+           <Image source={{uri:`http://img.youtube.com/vi/${item?.thumb}/default.jpg`}} style={styles.shortVideoImg} />
 
            </TouchableOpacity>
            

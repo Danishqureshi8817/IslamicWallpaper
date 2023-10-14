@@ -1,12 +1,15 @@
 import { StyleSheet, Text, View,FlatList,Image,TouchableOpacity, ImageBackground } from 'react-native'
-import React from 'react'
+import React,{useState,useEffect} from 'react'
 import colors from '../../styles/colors'
 import Header from '../../components/Header'
 import { responsiveFontSize, responsiveHeight, responsiveWidth } from 'react-native-responsive-dimensions'
 import { wWidht } from '../../styles/Dimensions'
-
+import { CallApiJson } from '../../utiles/network'
 
 const Quotes = ({navigation}) => {
+
+  const [categoryListData, setCategoryList] = useState()
+  const [wallpaperListData, setWallpaperListData] = useState()
 
   const quotes = [
     require('../../assets/images/quote1.png'),
@@ -17,6 +20,52 @@ const Quotes = ({navigation}) => {
   ]
 
 
+  const  fetchCategory =  async()=>{
+
+
+    const body = {
+      app_name: 'ISLAMICAPP',
+      type:'quotes'
+    };
+    
+    
+    const listCat = await CallApiJson('wallpapercategory', 'POST',body);
+    setCategoryList( listCat.category)
+    fetchWallpaper( listCat.category[0]?.id )
+     //dispatch(wallpaperList(listCat.category[0]?.id))
+    //
+    } 
+
+const  fetchWallpaper =  async(cat_id)=>{
+
+const body = {
+  app_name: 'ISLAMICAPP',
+  cat_id: cat_id
+};
+
+const listWall = await CallApiJson('wallpaperlist', 'POST',body);
+setWallpaperListData( listWall.wallpapers);
+
+
+}
+
+
+useEffect(
+
+  ()=>{
+
+    fetchCategory();
+      // dispatch(getCategory('wallpaper'))
+ //  dispatch(wallpaperList(categoryListData[0]?.id))
+
+    // fetch('https://fakestoreapi.com/products')
+    // .then(data=>data.json())
+    // .then(result => getlistData(result) )
+
+  }
+  ,[]
+)
+
 
   const quotesList = ({item,index}) => {
     //  console.log('compry',index,shortVideoData.length-1);
@@ -26,7 +75,7 @@ const Quotes = ({navigation}) => {
  
   
          return (
-            <ImageBackground resizeMode='contain' source={item} style={[styles.quotesImg,{marginTop:index==0?0:responsiveHeight(2)}]} >
+            <ImageBackground resizeMode='contain' source={{uri:`https://islamicwallpaper.newindiagyan.online/uploads/${item?.ori_img}`}} style={[styles.quotesImg,{marginTop:index==0?0:responsiveHeight(2)}]} >
 
             </ImageBackground>
          )
@@ -40,7 +89,7 @@ const Quotes = ({navigation}) => {
         style={{marginTop:responsiveHeight(2),marginHorizontal:responsiveWidth(4),alignSelf:'center'}}
 
       showsVerticalScrollIndicator={false}
-        data={quotes}
+        data={wallpaperListData}
         renderItem={quotesList}
       //  ListEmptyComponent={EmptyOption}
       

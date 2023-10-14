@@ -34,22 +34,60 @@ const Home = ({navigation}) => {
 
   const [selectedId, setSelectedId] = useState();
   const [Base64, setBase64] = useState()
+  const [categoryListData, setCategoryList] = useState()
+  const [wallpaperListData, setWallpaperListData] = useState()
 
   const dispatch = useDispatch();
 
-  const { categoryListData } = useSelector(state=>state.cat);
-  const { wallpaperListData } = useSelector(state=>state.wallPaper);
+  ///const { categoryListData } = useSelector(state=>state.cat);
+  // const { wallpaperListData } = useSelector(state=>state.wallPaper);
 
 //  console.log({navigation});
 
-console.log('cca',categoryListData);
+const  load =  async()=>{
+  
+  fetchCategory();
+
+} 
+
+const  fetchCategory =  async()=>{
+
+
+const body = {
+  app_name: 'ISLAMICAPP',
+  type:'wallpaper'
+};
+
+
+const listCat = await CallApiJson('wallpapercategory', 'POST',body);
+setCategoryList( listCat.category)
+fetchWallpaper( listCat.category[0]?.id )
+ //dispatch(wallpaperList(listCat.category[0]?.id))
+//
+} 
+
+
+const  fetchWallpaper =  async(cat_id)=>{
+
+const body = {
+  app_name: 'ISLAMICAPP',
+  cat_id: cat_id
+};
+
+const listWall = await CallApiJson('wallpaperlist', 'POST',body);
+setWallpaperListData( listWall.wallpapers);
+
+
+} 
+
 
   useEffect(
 
     ()=>{
  
-     dispatch(getCategory('wallpaper'))
-     dispatch(wallpaperList(categoryListData[0]?.id))
+      fetchCategory();
+    // dispatch(getCategory('wallpaper'))
+   //  dispatch(wallpaperList(categoryListData[0]?.id))
 
       // fetch('https://fakestoreapi.com/products')
       // .then(data=>data.json())
@@ -100,7 +138,7 @@ console.log('cca',categoryListData);
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
         downloadFile(imgUri)
       } else {
-        console.log('Storage permission denied');
+
       }
     } catch (err) {
       console.warn(err);
@@ -132,7 +170,6 @@ console.log('cca',categoryListData);
     //   console.log("Base64",rr);
     // })
     
-    console.log('The file saved to ', res.path())
     ToastAndroid.show('File downloaded Successfully', ToastAndroid.SHORT);
  
   })
@@ -165,7 +202,7 @@ console.log('cca',categoryListData);
 
   try {
     const ShareResponse = await Share.open(shareOptions);
-    console.log(JSON.stringify(shareOptions));
+
   } catch (error) {
     console.log('Error =>',error);
   }
@@ -198,7 +235,7 @@ console.log('cca',categoryListData);
 
   try {
     const ShareResponse = await Share.shareSingle(shareOptions);
-    console.log(JSON.stringify(shareOptions));
+
   } catch (error) {
     console.log('Error =>',error);
   }
@@ -215,7 +252,9 @@ console.log('cca',categoryListData);
       name={item?.name}
       img = {item?.img}
       onPress={() => {
-        dispatch(wallpaperList(item?.id))
+     
+        fetchWallpaper( item?.id)
+     //   dispatch(wallpaperList(item?.id))
         setSelectedId(index)
         }}
       backgroundColor={backgroundColor}
