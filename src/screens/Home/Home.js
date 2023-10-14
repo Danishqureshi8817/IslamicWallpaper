@@ -24,7 +24,7 @@ import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder'
 import EmptyOption from '../../components/EmptyOption'
 import fontsName from '../../styles/fontsName';
 import imagePaths from '../../contants/imagePaths';
-import { log } from 'react-native-reanimated';
+
 
 
 
@@ -42,7 +42,7 @@ const Home = ({navigation}) => {
 
 //  console.log({navigation});
 
-// console.log('cca',categoryListData[0].id);
+console.log('cca',categoryListData);
 
   useEffect(
 
@@ -443,7 +443,7 @@ const styles = StyleSheet.create({
     },
     optionsWrapper:{
       // paddingHorizontal:responsiveWidth(1),
-      marginHorizontal:responsiveWidth(2),
+      marginRight:responsiveWidth(1),
       // paddingVertical:responsiveHeight(3),
       // borderRadius:responsiveWidth(5),
       height:wHeight*0.1,

@@ -2,7 +2,7 @@ import { FlatList, Image, StyleSheet, Text, View,Dimensions, TouchableOpacity } 
 import React,{useEffect,useState} from 'react'
 
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import { Home, Login, Quotes, ShortVideo, WallpaerSet } from '../screens';
+import { Home, Login, Quotes, ShortVideo, WallpaerSet, YoutubePlayers, } from '../screens';
 import NavigationString from '../contants/NavigationString';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import CustomDrawer from '../components/CustomDrawer';
@@ -60,11 +60,18 @@ const DrawerStack = createDrawerNavigator();
           <Image source={imagePaths.videoIcon} style={{resizeMode:'contain',width:responsiveWidth(6),height:responsiveHeight(3)}} />
         )
       }}   />
+
+
       <DrawerStack.Screen name={NavigationString.Quotes} component={Quotes} options={{
         drawerIcon:({color})=>(
           <Image source={imagePaths.quoteIcon} style={{resizeMode:'contain',width:responsiveWidth(6),height:responsiveHeight(3)}} />
         )
       }}  />
+
+      <DrawerStack.Screen name={NavigationString.YoutubePlayers} component={YoutubePlayers} options={{headerShown:false,drawerItemStyle:{display:'none'}}}  />
+       
+
+     
       
     </DrawerStack.Navigator>
   );

@@ -6,6 +6,8 @@ export default {
     WallpaperSet:'WallpaperSet',
     ShortVideo:'ShortVideo',
     Quotes:'Quotes',
-    Wallpapers:'Wallpapers'
+    Wallpapers:'Wallpapers',
+    YoutubePlayers:'YoutubePlayers',
+
 
 }

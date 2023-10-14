@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import CallApi, {setToken ,CallApiJson } from '../utiles/network';
+import { log } from 'react-native-reanimated';
  const initialState= {
     categoryListData:[],
     danish:'start',
@@ -55,11 +56,13 @@ import CallApi, {setToken ,CallApiJson } from '../utiles/network';
 
 // RTQ API REDUX TOP ->
 
- export const getCategory = createAsyncThunk('category', async(type)=>{
+ export const getCategory = createAsyncThunk('category', async(types)=>{
+
+    console.log("get categoori name",types);
      
     const body = {
         app_name: 'ISLAMICAPP',
-        type:type
+        type:types
       };
 
       

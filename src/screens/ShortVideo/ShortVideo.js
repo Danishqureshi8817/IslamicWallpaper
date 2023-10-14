@@ -9,6 +9,10 @@ import { getCategory } from '../../store/CategorySlice';
 import { wallpaperList } from '../../store/wallpaperSlice'
 import fontsName from '../../styles/fontsName'
 
+import NavigationString from '../../contants/NavigationString'
+import { CallApiJson } from '../../utiles/network'
+
+
 const ShortVideo = ({navigation}) => {
 
    
@@ -70,6 +74,7 @@ const ShortVideo = ({navigation}) => {
    ]
 
   const [selectedId, setSelectedId] = useState();
+  const [shortVideos, setShortVideos] = useState()
   
 
   const dispatch = useDispatch();
@@ -77,24 +82,50 @@ const ShortVideo = ({navigation}) => {
   const { categoryListData } = useSelector(state=>state.cat);
   const { wallpaperListData } = useSelector(state=>state.wallPaper);
 
-   console.log({wallpaperListData});
 
+
+   console.log(categoryListData[0]?.id);
+
+  const fetchShortVideos = async(catId) =>{
+    
+    const body = {
+      app_name: 'ISLAMICAPP',
+      cat_id:catId
+    };
+    const result =  await CallApiJson('wallpaperlist', 'POST', body);
+
+      console.log('shortvideo Data',result.wallpapers);
+     await setShortVideos(result?.wallpapers)
+  }
+
+   
+  const fetchCategory = async () => {
+         
+    await dispatch(getCategory('short'))
+   
+    if(categoryListData != null){
+      fetchShortVideos(8)
+    }
+    
+  }
+
+
+  useEffect(()=>{
+
+     fetchCategory()
+     
   
-  useEffect(
+     
+    //  dispatch(wallpaperList(categoryListData[0]?.id))
 
-    ()=>{
- 
-     dispatch(getCategory('short'))
-     dispatch(wallpaperList(categoryListData[0].id))
-
-      // fetch('https://fakestoreapi.com/products')
+      // fetch('https://fakestoreapi.com/products')r
       // .then(data=>data.json())
       // .then(result => getlistData(result) )
 
 
-    }
-    ,[]
-  )
+
+
+    },[])
 
 
 
@@ -134,20 +165,45 @@ const ShortVideo = ({navigation}) => {
     
     const shortVideoList = ({item,index}) => {
   //  console.log('compry',index,shortVideoData.length-1);
-   var leg = wallpaperListData.length-1
+   var leg = shortVideos.length-1
+
+// var thumbData 
+  
+// const datathum = async () => { 
+//  var thumbDat = await LinkPreview.getPreview(item.ori_img)
+//  console.log({thumbDat});
+
+//  thumbData = await thumbDat
+//   // .then(data =>{ 
+//   //   // setThumbNail(data)
+//   //   thumbData=data
+//   //   console.log("Thumbnails",data.images[0])});
+//  }
+//  datathum()
+ console.log(item?.thumb);
+
        return (
         <View style={[styles.shortVideoWrapper,{marginBottom:leg==index?0:responsiveHeight(1)}]} >
-           <Image source={{uri:`https://islamicwallpaper.newindiagyan.online/uploads/${item.img_name}`}} style={styles.shortVideoImg} />
+
+           <TouchableOpacity onPress={()=>{navigation.navigate(NavigationString.YoutubePlayers)}} >
+           <Image source={{uri:`http://img.youtube.com/vi/qNW5STDw67c/default.jpg`}} style={styles.shortVideoImg} />
+
+           </TouchableOpacity>
+           
+
+       
 
            <View style={styles.shortVideoContentWrapper} >
-              <Text style={styles.shortVideoHeading} >{item.name}</Text>
-              <Text style={styles.shortVideoAuthor} >{item.author}</Text>
-              <Text style={styles.shortVideoDetail} >{item.detail}</Text>
-              { item.status != null && <Text style={styles.shortVideoStatus} >{item.status}</Text>}
+              <Text style={styles.shortVideoHeading} >{item?.name}</Text>
+              <Text style={styles.shortVideoAuthor} >{item?.cat_name}</Text>
+              <Text style={styles.shortVideoDetail} >{item?.no_view} views - 5 years ago</Text>
+              { item?.short_status != null && <Text style={styles.shortVideoStatus} >{item?.short_status}</Text>}
            </View>
         </View>
        )
     }
+
+
 
 
 
@@ -171,7 +227,7 @@ const ShortVideo = ({navigation}) => {
         style={{marginTop:responsiveHeight(2),marginHorizontal:responsiveWidth(4)}}
 
        showsHorizontalScrollIndicator={false}
-        data={wallpaperListData}
+        data={shortVideos}
         renderItem={shortVideoList}
       //  ListEmptyComponent={EmptyOption}
       
@@ -220,7 +276,8 @@ const styles = StyleSheet.create({
   shortVideoImg:{
     resizeMode:'contain',
     width:responsiveWidth(45),
-    height:responsiveHeight(16),
+    height:responsiveHeight(15),
+    borderRadius:responsiveWidth(2)
 
   },
   shortVideoContentWrapper:{
