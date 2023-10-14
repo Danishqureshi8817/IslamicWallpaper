@@ -12,14 +12,26 @@ const getUserAuth = async () => {
    return JSON.parse(value)
 }
 
+const setUserFirst = async (value) => {
+    await AsyncStorage.setItem('userFirst',value)
+}
+
+const getUserFirst = async () => {
+    const value =  await AsyncStorage.getItem('userFirst')
+ 
+    return JSON.parse(value)
+ }
+
 const Logout = () =>{
     AsyncStorage.clear()
 }
 
 
-export default {
+export  {
     setUserAuth,
     getUserAuth,
-    Logout
+    Logout,
+    setUserFirst,
+    getUserFirst,
 
 }

@@ -5,6 +5,8 @@ import Header from '../../components/Header'
 import { responsiveFontSize, responsiveHeight, responsiveWidth } from 'react-native-responsive-dimensions'
 import { wWidht } from '../../styles/Dimensions'
 import { CallApiJson } from '../../utiles/network'
+import { imageBaseURL,appName } from '../../contants/config'
+
 
 const Quotes = ({navigation}) => {
 
@@ -24,7 +26,7 @@ const Quotes = ({navigation}) => {
 
 
     const body = {
-      app_name: 'ISLAMICAPP',
+      app_name: appName,
       type:'quotes'
     };
     
@@ -39,7 +41,7 @@ const Quotes = ({navigation}) => {
 const  fetchWallpaper =  async(cat_id)=>{
 
 const body = {
-  app_name: 'ISLAMICAPP',
+  app_name: appName,
   cat_id: cat_id
 };
 
@@ -75,7 +77,7 @@ useEffect(
  
   
          return (
-            <ImageBackground resizeMode='contain' source={{uri:`https://islamicwallpaper.newindiagyan.online/uploads/${item?.ori_img}`}} style={[styles.quotesImg,{marginTop:index==0?0:responsiveHeight(2)}]} >
+            <ImageBackground resizeMode='cover' source={{uri:`${imageBaseURL}${item?.ori_img}`}} style={[styles.quotesImg,{marginTop:index==0?0:responsiveHeight(2),overflow:'hidden'}]} >
 
             </ImageBackground>
          )
@@ -93,7 +95,7 @@ useEffect(
         renderItem={quotesList}
       //  ListEmptyComponent={EmptyOption}
       
-        keyExtractor={index =>  index}
+        keyExtractor={ item =>  item?.id}
       />
 
     </View>
@@ -111,6 +113,7 @@ const styles = StyleSheet.create({
   
     width:wWidht*0.9,
     height:responsiveHeight(22),
+    borderRadius:responsiveWidth(4)
 
   }
 })

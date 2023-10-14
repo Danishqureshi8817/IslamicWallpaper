@@ -7,9 +7,10 @@ import LinearGradient from 'react-native-linear-gradient'
 import { responsiveFontSize, responsiveHeight, responsiveWidth } from 'react-native-responsive-dimensions'
 import fontsName from '../../styles/fontsName'
 import NavigationString from '../../contants/NavigationString'
-
+import {getUserFirst, setUserFirst} from '../../utiles/service'
 
 const Login = ({navigation}) => {
+
  
   return (
 
@@ -23,7 +24,10 @@ const Login = ({navigation}) => {
               <Text style={{color:colors.black,fontSize:responsiveFontSize(1.7),fontFamily:fontsName.PoppinsLight,marginTop:responsiveHeight(1)}} >Explore, create, watch</Text>
               <Text style={{color:colors.black,fontSize:responsiveFontSize(1.7),fontFamily:fontsName.PoppinsLight}}  >share 4k wallpapers.</Text>
 
-              <TouchableOpacity onPress={()=>{navigation.navigate(NavigationString.Home)}}  style={{backgroundColor:colors.exploreButton,marginTop:responsiveHeight(3),paddingVertical:responsiveHeight(1.6),paddingHorizontal:responsiveWidth(25),borderRadius:responsiveWidth(10),elevation:5}} >
+              <TouchableOpacity onPress={()=>{
+                setUserFirst('true')
+                navigation.navigate(NavigationString.Home)
+                }}  style={{backgroundColor:colors.exploreButton,marginTop:responsiveHeight(3),paddingVertical:responsiveHeight(1.6),paddingHorizontal:responsiveWidth(25),borderRadius:responsiveWidth(10),elevation:5}} >
                  <Text style={{color:colors.white,fontSize:responsiveFontSize(1.8),fontFamily:fontsName.PoppinsMedium}} >Explore Now</Text>
               </TouchableOpacity>
 

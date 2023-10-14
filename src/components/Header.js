@@ -10,15 +10,30 @@ import {
   } from 'react-native-responsive-dimensions';
 import imagePaths, { avtar } from '../contants/imagePaths';
 import fontsName from '../styles/fontsName';
+import NavigationString from '../contants/NavigationString';
 
-const Header = ({openDrawer,headerName,optionStyles}) => {
+const Header = ({openDrawer,headerName,optionStyles,iconName,navigation}) => {
   return (
     <View style={[styles.headerWrapper,{...optionStyles}]} >
 
     <View style={styles.headerSubWrapper} >
         {/* <Icon onPress={() => { }} name="menu" size={responsiveWidth(7)} color={colors.black} /> */}
         <TouchableOpacity onPress={openDrawer} >
-        <Image source={imagePaths.menuIcon}   style={styles.menuIcon} />
+       { iconName == null ? <Image source={imagePaths.menuIcon}   style={styles.menuIcon} /> : 
+       <Icon
+              name={iconName}
+              size={responsiveWidth(6)}
+              onPress={() => {
+                navigation.navigate(NavigationString.ShortVideo)
+              }}
+              color="#000"
+            //   style={{
+            //     marginRight: responsiveWidth(2),
+            //     position: 'absolute',
+            //     right: 0,
+            //     marginTop: responsiveHeight(1),
+            //   }}
+            />}
 
         </TouchableOpacity>
   

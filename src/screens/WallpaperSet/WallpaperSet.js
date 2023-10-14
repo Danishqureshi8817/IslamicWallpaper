@@ -5,6 +5,8 @@ import { responsiveFontSize, responsiveHeight, responsiveWidth } from 'react-nat
 import { wHeight, wWidht } from '../../styles/Dimensions'
 import Icon from 'react-native-vector-icons/Ionicons';
 import WallPaperManager from '@ajaybhatia/react-native-wallpaper-manager';
+import { imageBaseURL } from '../../contants/config'
+
 
 const WallpaperSet = ({navigation,route}) => {
 
@@ -17,7 +19,7 @@ const WallpaperSet = ({navigation,route}) => {
     const setWallpaper = () => {
         setProcess(true)
 
-        WallPaperManager.setWallpaper({uri: `https://islamicwallpaper.newindiagyan.online/uploads/${imgUrl}`, screen: 'home'},
+        WallPaperManager.setWallpaper({uri: `${imageBaseURL}${imgUrl}`, screen: 'home'},
         
         (res) => { console.log(res) ;
 
@@ -59,7 +61,7 @@ const WallpaperSet = ({navigation,route}) => {
        </View> */}
 
        <View style={styles.wallpaperWraper} >
-       <ImageBackground source={{uri:`https://islamicwallpaper.newindiagyan.online/uploads/${imgUrl}`}}  style={styles.wallpaperImg} > 
+       <ImageBackground source={{uri:`${imageBaseURL}${imgUrl}`}}  style={styles.wallpaperImg} > 
        <Pressable onPress={()=>{navigation.goBack()}} style={{marginBottom:responsiveHeight(30),marginLeft:responsiveWidth(2)}} >
        <Icon
           name="arrow-back-outline"

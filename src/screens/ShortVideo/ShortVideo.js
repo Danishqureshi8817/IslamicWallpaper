@@ -11,6 +11,7 @@ import fontsName from '../../styles/fontsName'
 
 import NavigationString from '../../contants/NavigationString'
 import { CallApiJson } from '../../utiles/network'
+import { appName } from '../../contants/config'
 
 
 const ShortVideo = ({navigation}) => {
@@ -26,62 +27,62 @@ const ShortVideo = ({navigation}) => {
  // const [shortVideos, setShortVideos] = useState()
   
 
-   const shortVideoData = [
-    {  
-       id:'01',
-        heading:'How to Pray?',
-        author:'Khudeja',
-        detail:'130k views - 7 years ago',
-        status:'Trending',
-        img:require('../../assets/images/short1.png')
+//    const shortVideoData = [
+//     {  
+//        id:'01',
+//         heading:'How to Pray?',
+//         author:'Khudeja',
+//         detail:'130k views - 7 years ago',
+//         status:'Trending',
+//         img:require('../../assets/images/short1.png')
 
-    },
-    { 
-      id:'02',
-      heading:'10 Beautiful things about Islam',
-      author:'Ayat166',
-      detail:'70k views - 1 year ago',
-      status:'Top-Rated',
-      img:require('../../assets/images/short2.png')
+//     },
+//     { 
+//       id:'02',
+//       heading:'10 Beautiful things about Islam',
+//       author:'Ayat166',
+//       detail:'70k views - 1 year ago',
+//       status:'Top-Rated',
+//       img:require('../../assets/images/short2.png')
 
-  },
-  {
-    id:'03',
-    heading:'How to give up bad habits',
-    author:'Farooq',
-    detail:'2.2k views - 12 Hours ago',
+//   },
+//   {
+//     id:'03',
+//     heading:'How to give up bad habits',
+//     author:'Farooq',
+//     detail:'2.2k views - 12 Hours ago',
    
-    img:require('../../assets/images/short3.png')
+//     img:require('../../assets/images/short3.png')
 
-},
-{ 
-  id:'04',
-  heading:'Every detail about Jannah you need to know',
-  author:'Noman',
-  detail:'130k views - 2 weeks ago',
+// },
+// { 
+//   id:'04',
+//   heading:'Every detail about Jannah you need to know',
+//   author:'Noman',
+//   detail:'130k views - 2 weeks ago',
 
-  img:require('../../assets/images/short4.png')
+//   img:require('../../assets/images/short4.png')
 
-},
-{ 
-  id:'05',
-  heading:'Arabic Language',
-  author:'Kaif',
-  detail:'66k views - 1 day ago',
-  status:'Must-Watch',
-  img:require('../../assets/images/short5.png')
+// },
+// { 
+//   id:'05',
+//   heading:'Arabic Language',
+//   author:'Kaif',
+//   detail:'66k views - 1 day ago',
+//   status:'Must-Watch',
+//   img:require('../../assets/images/short5.png')
 
-},
-{
-  id:'06',
-  heading:' Reading Quran',
-  author:'Umera',
-  detail:'12m views - 5 years ago',
-  status:'Trending',
-  img:require('../../assets/images/short6.png')
+// },
+// {
+//   id:'06',
+//   heading:' Reading Quran',
+//   author:'Umera',
+//   detail:'12m views - 5 years ago',
+//   status:'Trending',
+//   img:require('../../assets/images/short6.png')
 
-},
-   ]
+// },
+//    ]
 
 
   const dispatch = useDispatch();
@@ -115,7 +116,7 @@ const ShortVideo = ({navigation}) => {
 
 
     const body = {
-      app_name: 'ISLAMICAPP',
+      app_name: appName,
       type:'short'
     };
     
@@ -132,7 +133,7 @@ const ShortVideo = ({navigation}) => {
     const  fetchWallpaper =  async(cat_id)=>{
     
     const body = {
-      app_name: 'ISLAMICAPP',
+      app_name: appName,
       cat_id: cat_id
     };
     
@@ -174,6 +175,7 @@ const ShortVideo = ({navigation}) => {
         img = {item.img}
         onPress={() => {
           // dispatch(wallpaperList(index+1))
+          fetchWallpaper(item?.id)
           setSelectedId(index)
           }}
         backgroundColor={backgroundColor}
@@ -217,7 +219,7 @@ const ShortVideo = ({navigation}) => {
        return (
         <View style={[styles.shortVideoWrapper,{marginBottom:leg==index?0:responsiveHeight(1)}]} >
 
-           <TouchableOpacity onPress={()=>{navigation.navigate(NavigationString.YoutubePlayers)}} >
+           <TouchableOpacity onPress={()=>{navigation.navigate(NavigationString.YoutubePlayers,{videoId:item?.thumb})}} >
            <Image source={{uri:`http://img.youtube.com/vi/${item?.thumb}/default.jpg`}} style={styles.shortVideoImg} />
 
            </TouchableOpacity>

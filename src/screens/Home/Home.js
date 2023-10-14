@@ -24,6 +24,8 @@ import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder'
 import EmptyOption from '../../components/EmptyOption'
 import fontsName from '../../styles/fontsName';
 import imagePaths from '../../contants/imagePaths';
+import { appName, imageBaseURL,shareImgText } from '../../contants/config';
+
 
 
 
@@ -70,7 +72,7 @@ fetchWallpaper( listCat.category[0]?.id )
 const  fetchWallpaper =  async(cat_id)=>{
 
 const body = {
-  app_name: 'ISLAMICAPP',
+  app_name: appName,
   cat_id: cat_id
 };
 
@@ -100,24 +102,7 @@ setWallpaperListData( listWall.wallpapers);
 
   // console.log('ctry', wallpaperListData[1].img_name )
  
-  const hadisData = [
-    {
-        id:'01',
-        img:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR5dtjsLKRZb_ipdnFqAS8ic80Te5wEZyUfBg&usqp=CAU"
-    },
-    {
-        id:'02',
-        img:"https://i.pinimg.com/736x/14/98/0e/14980e0e4024f1d4757f993793f4eb85.jpg"
-    },
-    {
-        id:'03',
-        img:"https://i.pinimg.com/736x/f9/87/df/f987dfccfe88f125a742af67f232ebfe.jpg"
-    },
-    {
-        id:'04',
-        img:"https://i.pinimg.com/736x/a3/87/2c/a3872c07d5b3152ffe25a8940bba50c5.jpg"
-    },
-  ]
+
 
   // const imageShr = ''
 
@@ -161,7 +146,7 @@ setWallpaperListData( listWall.wallpapers);
       description:'Wallpapers Download'
     }
   })
-  .fetch('GET', `https://islamicwallpaper.newindiagyan.online/uploads/${uriImg}`, {
+  .fetch('GET', `${imageBaseURL}${uriImg}`, {
     //some headers ..
   })
   .then((res) => {
@@ -177,7 +162,7 @@ setWallpaperListData( listWall.wallpapers);
 
  const myShare = async (imgUri) =>{
     
-  RNFetchBlob.fetch('GET', `https://islamicwallpaper.newindiagyan.online/uploads/${imgUri}`, {
+  RNFetchBlob.fetch('GET', `${imageBaseURL}${imgUri}`, {
     //some headers ..
   }).then(async(res) => {
     // the temp file path
@@ -194,7 +179,7 @@ setWallpaperListData( listWall.wallpapers);
 
 
   const shareOptions ={ 
-    message:'Download Islamimc Wallpaper App From Playstore ',
+    message:`${shareImgText}`,
     url:`data:image/jpeg;base64,${Base64}`,
     // social:Share.Social.WHATSAPP
    
@@ -212,7 +197,7 @@ setWallpaperListData( listWall.wallpapers);
  const shareWhatsapp = async (imgUri) =>{
   
   // let bse64='';
-  RNFetchBlob.fetch('GET', `https://islamicwallpaper.newindiagyan.online/uploads/${imgUri}`, {
+  RNFetchBlob.fetch('GET', `${imageBaseURL}${imgUri}`, {
     //some headers ..
   }).then(async(res) => {
     // the temp file path
@@ -227,7 +212,7 @@ setWallpaperListData( listWall.wallpapers);
   })
 //  console.log('bas64',Base64);
   const shareOptions ={ 
-    message:'Download Islamimc Wallpaper App From Playstore',
+    message:`${shareImgText}`,
     url:`data:image/jpeg;base64,${Base64}`,
     social:Share.Social.WHATSAPP
    
@@ -270,7 +255,7 @@ const Item = ({name, img,onPress, backgroundColor, textColor}) => (
 
     <TouchableOpacity onPress={onPress} >
 
-      <Image source={{uri:`https://islamicwallpaper.newindiagyan.online/uploads/${img}`}} style={styles.optionIcon}  /> 
+      <Image source={{uri:`${imageBaseURL}${img}`}} style={styles.optionIcon}  /> 
 
   </TouchableOpacity>
     <Text style={[styles.optionText,{color:textColor}]}>{name}</Text>
@@ -402,7 +387,7 @@ const emptyItem = () => {
           // console.log("size",(hadisData.length-1),index)
            return(
             <Pressable onPress={()=>{navigation.navigate(NavigationString.WallpaperSet,{imgUrl:item.img_name})}} style={[styles.itemWrapper,{marginTop:(index!=0 && index != 1) &&responsiveHeight(2),marginRight:index%2 == 0 && responsiveWidth(3)}]} >
-              <ImageBackground source={{uri:`https://islamicwallpaper.newindiagyan.online/uploads/${item.img_name}`}} style={[styles.image,{justifyContent:index%2 == 0?'space-between':'flex-end'}]} >
+              <ImageBackground source={{uri:`${imageBaseURL}${item.img_name}`}} style={[styles.image,{justifyContent:index%2 == 0?'space-between':'flex-end'}]} >
                     
           {  index%2 == 0 &&        <View style={styles.trendingWrapper} >
                       <Image source={imagePaths.fire} style={{resizeMode:'contain',width:responsiveWidth(4),height:responsiveHeight(1.8),marginLeft:responsiveWidth(0.8)}} />
@@ -422,15 +407,15 @@ const emptyItem = () => {
                         </View>
 
                         <View style={styles.rightIconWrapper}>
-                        <TouchableOpacity onPress={()=>{}} style={styles.iconCircle} >
+                        <TouchableOpacity onPress={()=>{myShare(item.img_name)}} style={styles.iconCircle} >
                         <Icon  name="paper-plane-outline" size={responsiveWidth(3.5)} color={'#FFFFFF'} />
                         
                         </TouchableOpacity>
                         
-                        <TouchableOpacity onPress={()=>{}} style={styles.iconCircle} >
+                        {/* <TouchableOpacity onPress={()=>{}} style={styles.iconCircle} >
                         <Icon  name="heart-outline" size={responsiveWidth(3.5)} color={'#FFFFFF'} />
                         
-                        </TouchableOpacity>
+                        </TouchableOpacity> */}
 {/* 
                         <TouchableOpacity  onPress={()=>{requestStoragePermission(item.img_name)}} >
                         <Icon name="cloud-download" size={responsiveWidth(7)} color={colors.themeText} />

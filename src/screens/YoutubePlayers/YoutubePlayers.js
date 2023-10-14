@@ -7,15 +7,16 @@ import { responsiveFontSize, responsiveHeight, responsiveWidth } from 'react-nat
 import YoutubePlayer from "react-native-youtube-iframe";
 import { wHeight, wWidht } from '../../styles/Dimensions'
 
-const YoutubePlayers = ({navigation}) => {
-    // console.log(route);
-    // const {youtubeId} = route.params
+const YoutubePlayers = ({navigation,route}) => {
+    
+    const {videoId} = route.params
+    console.log({videoId});
 
     const [playVideo, setPlayVideo] = useState(false)
 
   return (
     <View style={styles.mainContainer} >
-        <Header openDrawer={()=> navigation.openDrawer()} headerName={'Short Video Player'} optionStyles={{borderBottomWidth:1,borderBottomColor:colors.blackOpacity15}} />
+        <Header openDrawer={()=> navigation.openDrawer()} iconName='arrow-back-outline' headerName={'Short Video Player'} optionStyles={{borderBottomWidth:1,borderBottomColor:colors.blackOpacity15}} navigation={navigation} />
         
 
         <View style={{ alignItems: 'center',marginTop:responsiveHeight(28)}}    >
@@ -24,7 +25,7 @@ const YoutubePlayers = ({navigation}) => {
             width={wWidht*0.9}
             height={wHeight*0.6}
             play={playVideo}
-            videoId={'qNW5STDw67c'}
+            videoId={videoId}
                             
                          onChangeState={(state)=>{
                          
