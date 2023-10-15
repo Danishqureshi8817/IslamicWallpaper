@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View,Image,FlatList,ImageBackground,TouchableOpacity,Linking, PermissionsAndroid,ToastAndroid,Pressable } from 'react-native'
+import { StyleSheet, Text, View,Image,FlatList,ImageBackground,TouchableOpacity,Linking, PermissionsAndroid,ToastAndroid,Pressable , Button } from 'react-native'
 import React,{useState,useEffect} from 'react'
 import colors from '../../styles/colors'
 
@@ -28,7 +28,15 @@ import { appName, imageBaseURL,shareImgText } from '../../contants/config';
 
 import VersionCheck from 'react-native-version-check';
 
+import { BannerAd, BannerAdSize, TestIds ,  InterstitialAd,  AdEventType } from 'react-native-google-mobile-ads';
+const adUnitIdIntrestial = TestIds.INTERSTITIAL ;
 
+const adUnitId =  TestIds.BANNER ;
+
+const interstitial = InterstitialAd.createForAdRequest(adUnitIdIntrestial, {
+  requestNonPersonalizedAdsOnly: true,
+  keywords: ['fashion', 'clothing'],
+});
 //ad nnetwork
 import AppLovinMAX from  "react-native-applovin-max";
 
@@ -174,6 +182,21 @@ function initializeBannerAds()
   // console.log('ctry', wallpaperListData[1].img_name )
  
 
+
+  useEffect(() => {
+    const unsubscribe = interstitial.addAdEventListener(AdEventType.LOADED, () => {
+
+
+      console.log( 'admobintrestial loaded')
+
+    });
+
+    // Start loading the interstitial straight away
+    interstitial.load();
+
+    // Unsubscribe from events on unmount
+    return unsubscribe;
+  }, []);
 
   // const imageShr = ''
 
@@ -445,6 +468,7 @@ const emptyItem = () => {
       
         keyExtractor={item => item.id}
       />
+
  
      
        <FlatList

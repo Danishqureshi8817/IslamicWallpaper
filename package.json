@@ -23,6 +23,7 @@
     "react-native-applovin-max": "^5.7.2",
     "react-native-encrypted-storage": "^4.0.3",
     "react-native-gesture-handler": "^2.12.1",
+    "react-native-google-mobile-ads": "^12.3.0",
     "react-native-image-base64-png": "^0.2.1",
     "react-native-linear-gradient": "^2.8.3",
     "react-native-link-preview": "^1.4.2",

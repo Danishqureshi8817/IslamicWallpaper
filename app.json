@@ -1,4 +1,9 @@
 {
   "name": "IslamicWallpaper",
-  "displayName": "IslamicWallpaper"
+  "displayName": "IslamicWallpaper",
+  "react-native-google-mobile-ads": {
+    "android_app_id": "ca-app-pub-1573251550611689~6089902295"
+  }
+
+ 
 }
