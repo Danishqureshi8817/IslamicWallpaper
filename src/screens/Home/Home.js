@@ -28,15 +28,20 @@ import { appName, imageBaseURL,shareImgText } from '../../contants/config';
 
 import VersionCheck from 'react-native-version-check';
 
+// admob ads 
 import { BannerAd, BannerAdSize, TestIds ,  InterstitialAd,  AdEventType } from 'react-native-google-mobile-ads';
-const adUnitIdIntrestial = TestIds.INTERSTITIAL ;
+const adUnitIdIntrestial = 'ca-app-pub-1573251550611689/7372882159' ;
+const adUnitREWARDED_INTERSTITIAL = 'ca-app-pub-1573251550611689/8193378920';
+constadunitRewarded = 'ca-app-pub-1573251550611689/2036794990';
+const adUnitId =  'ca-app-pub-1573251550611689/6870319276' ;
 
-const adUnitId =  TestIds.BANNER ;
 
-const interstitial = InterstitialAd.createForAdRequest(adUnitIdIntrestial, {
-  requestNonPersonalizedAdsOnly: true,
-  keywords: ['fashion', 'clothing'],
+const interstitialAdmob = InterstitialAd.createForAdRequest(adUnitIdIntrestial, {
+  requestNonPersonalizedAdsOnly: true
 });
+// admob ads
+
+
 //ad nnetwork
 import AppLovinMAX from  "react-native-applovin-max";
 
@@ -79,6 +84,7 @@ const Home = ({navigation}) => {
   const [Base64, setBase64] = useState()
   const [categoryListData, setCategoryList] = useState()
   const [wallpaperListData, setWallpaperListData] = useState()
+  const [admobIntrestial, setadmobIntrestial] = useState(false);
 
   const dispatch = useDispatch();
   const userPaidType = 'FREE';
@@ -86,6 +92,35 @@ const Home = ({navigation}) => {
   // const { wallpaperListData } = useSelector(state=>state.wallPaper);
 
 //  console.log({navigation});
+
+
+    //google ad mob ads
+
+    const   loadAdmobIntrestial = ()=>{
+      if( admobIntrestial==true )  
+      interstitialAdmob.show();
+  
+  }
+  
+  
+      useEffect(  () => {
+          const unsubscribe = interstitialAdmob.addAdEventListener(AdEventType.LOADED, () => {
+            setadmobIntrestial(true)
+  
+          });
+      
+          // Start loading the interstitial straight away
+          interstitialAdmob.load();
+      
+           const timer = setTimeout(() => loadAdmobIntrestial() , 20000);
+          // Unsubscribe from events on unmount
+          return unsubscribe;
+        }, []);
+  
+      //google admob 
+
+
+
 
 const  load =  async()=>{
   
@@ -183,20 +218,7 @@ function initializeBannerAds()
  
 
 
-  useEffect(() => {
-    const unsubscribe = interstitial.addAdEventListener(AdEventType.LOADED, () => {
-
-
-      console.log( 'admobintrestial loaded')
-
-    });
-
-    // Start loading the interstitial straight away
-    interstitial.load();
-
-    // Unsubscribe from events on unmount
-    return unsubscribe;
-  }, []);
+ 
 
   // const imageShr = ''
 
@@ -469,7 +491,8 @@ const emptyItem = () => {
         keyExtractor={item => item.id}
       />
 
- 
+
+
      
        <FlatList
       style={{marginTop:responsiveHeight(1.5),alignSelf:'center'}}
@@ -488,7 +511,8 @@ const emptyItem = () => {
                       <Text style={{color:'#FF7A00',fontSize:responsiveFontSize(1),fontFamily:fontsName.PoppinsLight,alignSelf:'center',fontWeight:'500'}} >Trending</Text>
                     </View>}
                 
-                    
+
+        
                     <View style={styles.iconsWrapper} >
                         <View style={styles.leftIconWrapper}>
                         {/* <Icon name="eye" size={responsiveWidth(5)} color={'#ebebeb'} /> */}
@@ -527,7 +551,20 @@ const emptyItem = () => {
 
                  </View> */}
               </ImageBackground>
+
+     <BannerAd
+      unitId={adUnitId}
+      size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+      requestOptions={{
+        requestNonPersonalizedAdsOnly: true,
+      }}
+    />
+
+        
+
+
             </Pressable>
+
 
             //   <Image source={item.img} />
            )

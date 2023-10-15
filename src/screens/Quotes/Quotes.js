@@ -7,11 +7,32 @@ import { wWidht } from '../../styles/Dimensions'
 import { CallApiJson } from '../../utiles/network'
 import { imageBaseURL,appName } from '../../contants/config'
 
+// admob ads 
+import { BannerAd, BannerAdSize, TestIds ,  InterstitialAd,  AdEventType  ,RewardedAd, RewardedAdEventType } from 'react-native-google-mobile-ads';
+const adUnitIdIntrestial = 'ca-app-pub-1573251550611689/7372882159' ;
+const adUnitREWARDED_INTERSTITIAL = 'ca-app-pub-1573251550611689/8193378920';
+const adunitRewarded = 'ca-app-pub-1573251550611689/2036794990';
+const adUnitId =  'ca-app-pub-1573251550611689/6870319276' ;
+
+
+const rewardedAdMob = RewardedAd.createForAdRequest(adunitRewarded, {
+    requestNonPersonalizedAdsOnly: true
+});
+
+const interstitialAdmob = InterstitialAd.createForAdRequest(adUnitIdIntrestial, {
+    requestNonPersonalizedAdsOnly: true
+  });
+// admob ads
+
 
 const Quotes = ({navigation}) => {
 
   const [categoryListData, setCategoryList] = useState()
   const [wallpaperListData, setWallpaperListData] = useState()
+
+  const [admobIntrestial, setadmobIntrestial] = useState(false);
+  const [admobRewarded, setadmobRewarded] = useState(false);
+
 
   const quotes = [
     require('../../assets/images/quote1.png'),
@@ -20,6 +41,75 @@ const Quotes = ({navigation}) => {
     require('../../assets/images/quote4.png'),
 
   ]
+
+ 
+
+    //google ad mob ads
+
+
+//rewarded
+
+
+const   showAdmobRewarded = ()=>{
+
+  if( admobRewarded==true )
+  rewardedAdMob.show();
+
+}
+
+useEffect(() => {
+  const unsubscribeLoaded = rewardedAdMob.addAdEventListener(RewardedAdEventType.LOADED, () => {
+
+      setadmobRewarded(true)
+  });
+  const unsubscribeEarned = rewardedAdMob.addAdEventListener(
+    RewardedAdEventType.EARNED_REWARD,
+    reward => {
+      console.log('User earned reward of ', reward);
+    },
+  );
+
+  // Start loading the rewarded ad straight away
+  rewardedAdMob.load();
+
+  // Unsubscribe from events on unmount
+  return () => {
+    unsubscribeLoaded();
+    unsubscribeEarned();
+  };
+}, []);
+
+
+
+//rewarded
+
+  //intrestiall
+
+const   loadAdmobIntrestial = ()=>{
+
+  if( admobIntrestial==true )  interstitialAdmob.show();
+
+}
+
+
+  useEffect(  () => {
+      const unsubscribe = interstitialAdmob.addAdEventListener(AdEventType.LOADED, () => {
+          setadmobIntrestial(true)
+
+      });
+  
+      // Start loading the interstitial straight away
+      interstitialAdmob.load();
+  
+       const timer = setTimeout(() => loadAdmobIntrestial() , 5000);
+      // Unsubscribe from events on unmount
+      return unsubscribe;
+    }, []);
+
+//intrestail
+
+  //google admob 
+
 
 
   const  fetchCategory =  async()=>{
@@ -32,6 +122,7 @@ const Quotes = ({navigation}) => {
     
     
     const listCat = await CallApiJson('wallpapercategory', 'POST',body);
+    console.log( 'listCat quotes ', listCat)
     setCategoryList( listCat.category)
     fetchWallpaper( listCat.category[0]?.id )
      //dispatch(wallpaperList(listCat.category[0]?.id))
@@ -77,9 +168,24 @@ useEffect(
  
   
          return (
-            <ImageBackground resizeMode='cover' source={{uri:`${imageBaseURL}${item?.ori_img}`}} style={[styles.quotesImg,{marginTop:index==0?0:responsiveHeight(2),overflow:'hidden'}]} >
+          <>
 
+<ImageBackground resizeMode='cover' source={{uri:`${imageBaseURL}${item?.ori_img}`}} style={[styles.quotesImg,{marginTop:index==0?0:responsiveHeight(2),overflow:'hidden'}]} >
             </ImageBackground>
+
+            { index%2==0 &&
+
+            <BannerAd
+            unitId={adUnitId}
+            size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+            requestOptions={{
+                requestNonPersonalizedAdsOnly: true,
+            }}
+        />
+          }
+
+          </>
+            
          )
       }
 

@@ -13,12 +13,33 @@ import NavigationString from '../../contants/NavigationString'
 import { CallApiJson } from '../../utiles/network'
 import { appName } from '../../contants/config'
 
+// admob ads 
+import { BannerAd, BannerAdSize, TestIds ,  InterstitialAd,  AdEventType  ,RewardedAd, RewardedAdEventType } from 'react-native-google-mobile-ads';
+const adUnitIdIntrestial = 'ca-app-pub-1573251550611689/7372882159' ;
+const adUnitREWARDED_INTERSTITIAL = 'ca-app-pub-1573251550611689/8193378920';
+const adunitRewarded = 'ca-app-pub-1573251550611689/2036794990';
+const adUnitId =  'ca-app-pub-1573251550611689/6870319276' ;
+
+
+const rewardedAdMob = RewardedAd.createForAdRequest(adunitRewarded, {
+    requestNonPersonalizedAdsOnly: true
+});
+
+const interstitialAdmob = InterstitialAd.createForAdRequest(adUnitIdIntrestial, {
+    requestNonPersonalizedAdsOnly: true
+  });
+// admob ads
+
 
 const ShortVideo = ({navigation}) => {
 
    
   const [categoryListData, setCategoryList] = useState()
   const [shortVideos, setShortVideos] = useState()
+
+  const [admobIntrestial, setadmobIntrestial] = useState(false);
+  const [admobRewarded, setadmobRewarded] = useState(false);
+
   // const { categoryListData } = useSelector(state=>state.cat);
   // const { wallpaperListData } = useSelector(state=>state.wallPaper);
 
@@ -26,6 +47,76 @@ const ShortVideo = ({navigation}) => {
   const [selectedId, setSelectedId] = useState();
  // const [shortVideos, setShortVideos] = useState()
   
+
+
+    //google ad mob ads
+
+
+//rewarded
+
+
+const   showAdmobRewarded = ()=>{
+
+  if( admobRewarded==true )
+  rewardedAdMob.show();
+
+}
+
+useEffect(() => {
+  const unsubscribeLoaded = rewardedAdMob.addAdEventListener(RewardedAdEventType.LOADED, () => {
+
+      setadmobRewarded(true)
+  });
+  const unsubscribeEarned = rewardedAdMob.addAdEventListener(
+    RewardedAdEventType.EARNED_REWARD,
+    reward => {
+      console.log('User earned reward of ', reward);
+    },
+  );
+
+  // Start loading the rewarded ad straight away
+  rewardedAdMob.load();
+
+  // Unsubscribe from events on unmount
+  return () => {
+    unsubscribeLoaded();
+    unsubscribeEarned();
+  };
+}, []);
+
+
+
+//rewarded
+
+  //intrestiall
+
+const   loadAdmobIntrestial = ()=>{
+
+  if( admobIntrestial==true )  interstitialAdmob.show();
+
+}
+
+
+  useEffect(  () => {
+      const unsubscribe = interstitialAdmob.addAdEventListener(AdEventType.LOADED, () => {
+          setadmobIntrestial(true)
+
+      });
+  
+      // Start loading the interstitial straight away
+      interstitialAdmob.load();
+  
+       const timer = setTimeout(() => loadAdmobIntrestial() , 5000);
+      // Unsubscribe from events on unmount
+      return unsubscribe;
+    }, []);
+
+//intrestail
+
+  //google admob 
+
+
+
 
 //    const shortVideoData = [
 //     {  
@@ -170,6 +261,7 @@ const ShortVideo = ({navigation}) => {
     const color = index === selectedId ? '#000000' : 'white';
   
     return (
+      <>
       <Item
         name={item?.name}
         img = {item.img}
@@ -182,6 +274,11 @@ const ShortVideo = ({navigation}) => {
         textColor={color}
         index={index}
       />
+
+    
+
+</>
+
     );
   };
 
@@ -217,6 +314,8 @@ const ShortVideo = ({navigation}) => {
 //  datathum()
 
        return (
+        <>
+        
         <View style={[styles.shortVideoWrapper,{marginBottom:leg==index?0:responsiveHeight(1)}]} >
 
            <TouchableOpacity onPress={()=>{navigation.navigate(NavigationString.YoutubePlayers,{videoId:item?.thumb})}} >
@@ -234,6 +333,22 @@ const ShortVideo = ({navigation}) => {
               { item?.short_status != null && <Text style={styles.shortVideoStatus} >{item?.short_status}</Text>}
            </View>
         </View>
+
+{ index%2==0 &&
+
+<BannerAd
+unitId={adUnitId}
+size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+requestOptions={{
+    requestNonPersonalizedAdsOnly: true,
+}}
+/>
+    }
+
+</>
+
+
+
        )
     }
 

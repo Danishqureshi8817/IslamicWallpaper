@@ -8,6 +8,26 @@ import WallPaperManager from '@ajaybhatia/react-native-wallpaper-manager';
 import { imageBaseURL } from '../../contants/config'
 import { useNavigation, useIsFocused } from "@react-navigation/native";
 
+
+// admob ads 
+import { BannerAd, BannerAdSize, TestIds ,  InterstitialAd,  AdEventType  ,RewardedAd, RewardedAdEventType } from 'react-native-google-mobile-ads';
+const adUnitIdIntrestial = 'ca-app-pub-1573251550611689/7372882159' ;
+const adUnitREWARDED_INTERSTITIAL = 'ca-app-pub-1573251550611689/8193378920';
+const adunitRewarded = 'ca-app-pub-1573251550611689/2036794990';
+const adUnitId =  'ca-app-pub-1573251550611689/6870319276' ;
+
+
+const rewardedAdMob = RewardedAd.createForAdRequest(adunitRewarded, {
+    requestNonPersonalizedAdsOnly: true
+});
+
+const interstitialAdmob = InterstitialAd.createForAdRequest(adUnitIdIntrestial, {
+    requestNonPersonalizedAdsOnly: true
+  });
+// admob ads
+
+
+
 //ad nnetwork
 import AppLovinMAX from  "react-native-applovin-max";
 
@@ -48,10 +68,79 @@ const WallpaperSet = ({navigation,route}) => {
     const {imgUrl} = route.params;
 
     const [process, setProcess] = useState(false)
+    const [admobIntrestial, setadmobIntrestial] = useState(false);
+    const [admobRewarded, setadmobRewarded] = useState(false);
+ 
     const navigationUrl = useNavigation();
 
     // console.log({imgUrl});
 
+
+    //google ad mob ads
+
+
+//rewarded
+
+
+const   showAdmobRewarded = ()=>{
+
+    if( admobRewarded==true )
+    rewardedAdMob.show();
+
+}
+
+useEffect(() => {
+    const unsubscribeLoaded = rewardedAdMob.addAdEventListener(RewardedAdEventType.LOADED, () => {
+
+        setadmobRewarded(true)
+    });
+    const unsubscribeEarned = rewardedAdMob.addAdEventListener(
+      RewardedAdEventType.EARNED_REWARD,
+      reward => {
+        console.log('User earned reward of ', reward);
+      },
+    );
+
+    // Start loading the rewarded ad straight away
+    rewardedAdMob.load();
+
+    // Unsubscribe from events on unmount
+    return () => {
+      unsubscribeLoaded();
+      unsubscribeEarned();
+    };
+  }, []);
+
+
+
+//rewarded
+
+    //intrestiall
+
+  const   loadAdmobIntrestial = ()=>{
+
+    if( admobIntrestial==true )  interstitialAdmob.show();
+
+}
+
+
+    useEffect(  () => {
+        const unsubscribe = interstitialAdmob.addAdEventListener(AdEventType.LOADED, () => {
+            setadmobIntrestial(true)
+
+        });
+    
+        // Start loading the interstitial straight away
+        interstitialAdmob.load();
+    
+         const timer = setTimeout(() => loadAdmobIntrestial() , 5000);
+        // Unsubscribe from events on unmount
+        return unsubscribe;
+      }, []);
+
+//intrestail
+
+    //google admob 
  
     const [retryAttempt, setRetryAttempt] = useState(0);
     
@@ -96,6 +185,7 @@ const WallpaperSet = ({navigation,route}) => {
 //applovin 
 useEffect(() => {
 
+    
     initializeInterstitialAds();
     
 
@@ -130,6 +220,8 @@ useEffect(() => {
 
 
     const setWallpaper = () => {
+
+        showAdmobRewarded();
         setProcess(true)
 
         WallPaperManager.setWallpaper({uri: `${imageBaseURL}${imgUrl}`, screen: 'home'},
@@ -187,9 +279,21 @@ useEffect(() => {
         <ActivityIndicator size='large' animating={process} color='#FF7A00' style={{alignSelf:'center',marginBottom:responsiveHeight(45)}} />
           
 
-       <TouchableOpacity onPress={()=>{ showApplovinIntrestial();  setWallpaper()}} style={styles.buttonWrapper} >
+       <TouchableOpacity onPress={()=>{   setWallpaper()}} style={styles.buttonWrapper} >
            <Text style={styles.buttonText}>SET AS WALLPAPER</Text>
+
+                                
+        
+
        </TouchableOpacity>
+
+       <BannerAd
+            unitId={adUnitId}
+            size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+            requestOptions={{
+                requestNonPersonalizedAdsOnly: true,
+            }}
+            />
 
        </ImageBackground>
        </View>
@@ -254,7 +358,7 @@ const styles = StyleSheet.create({
         paddingHorizontal:responsiveWidth(20),
         paddingVertical:responsiveHeight(1.5),
         borderRadius:responsiveWidth(2),
-        marginBottom:responsiveHeight(10),
+        marginBottom:responsiveHeight(5),
         elevation:5
         // marginTop:responsiveHeight(4),
     },
