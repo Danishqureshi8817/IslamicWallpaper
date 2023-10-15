@@ -1,6 +1,8 @@
 import EncryptedStorage from 'react-native-encrypted-storage';
 
-const API_uri = 'https://islamicwallpaper.newindiagyan.online/api/';
+const API_uri = 'https://zstechnology.online/api/';
+
+
 function CallApi(endpoint, method = 'GET', body = null, token = null) {
   const toUrlEncoded = obj =>
     Object.keys(obj)
@@ -34,14 +36,15 @@ function CallApi(endpoint, method = 'GET', body = null, token = null) {
 }
 
 function CallApiJson(endpoint, method = 'GET', body = null, token = null) {
+
   const toUrlEncoded = obj =>
     Object.keys(obj)
       .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(obj[k]))
       .join('&');
 
   body = body ? JSON.stringify(body) : null;
-   console.log( 'networkbody', body)
-   return new Promise(resolve => {
+
+  return new Promise(resolve => {
     let headres = {
       'Accept': 'application/json',
       'Content-Type': 'application/json',

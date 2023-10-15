@@ -26,8 +26,41 @@ import fontsName from '../../styles/fontsName';
 import imagePaths from '../../contants/imagePaths';
 import { appName, imageBaseURL,shareImgText } from '../../contants/config';
 
+import VersionCheck from 'react-native-version-check';
 
 
+//ad nnetwork
+import AppLovinMAX from  "react-native-applovin-max";
+
+
+//applovin
+AppLovinMAX.initialize("WbvV2RHHbEGVC_s0Od_B0cZoG97sxIom919586O4G_eOin_W3n6ef2WdHqlug5t5IG_ZSo2D6VGE11RWPocUqk").then(configuration => {
+  // SDK is initialized, start loading ads
+  AppLovinMAX.setVerboseLogging(true);
+
+  console.log( 'configuration',configuration )
+//  AppLovinMAX.showMediationDebugger();
+
+}).catch(error => {
+  console.log( 'AppLovinMAX configurationerror',error )
+
+});
+
+const BANNER_AD_UNIT_ID = Platform.select({
+  android: 'f615ab074dea518f'
+ });
+ const MREC_AD_UNIT_ID = Platform.select({
+  android: '7f7595b047f6719c'
+});
+
+ const REWARDED_AD_UNIT_ID = Platform.select({
+  android: '51b25fecd719c5f0',
+ });
+ const INTERSTITIAL_AD_UNIT_ID = Platform.select({
+  android: '49937ce4575b4e66',
+ });
+
+ //app lovin ad
 
 
 const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient)
@@ -40,7 +73,7 @@ const Home = ({navigation}) => {
   const [wallpaperListData, setWallpaperListData] = useState()
 
   const dispatch = useDispatch();
-
+  const userPaidType = 'FREE';
   ///const { categoryListData } = useSelector(state=>state.cat);
   // const { wallpaperListData } = useSelector(state=>state.wallPaper);
 
@@ -62,6 +95,7 @@ const body = {
 
 
 const listCat = await CallApiJson('wallpapercategory', 'POST',body);
+ 
 setCategoryList( listCat.category)
 fetchWallpaper( listCat.category[0]?.id )
  //dispatch(wallpaperList(listCat.category[0]?.id))
@@ -79,8 +113,42 @@ const body = {
 const listWall = await CallApiJson('wallpaperlist', 'POST',body);
 setWallpaperListData( listWall.wallpapers);
 
-
 } 
+
+const checkUpdateNeeded = async () => {
+  const latestVersion = await VersionCheck.getLatestVersion();
+  const currentVersion = VersionCheck.getCurrentVersion()
+  let updateNeeded = await VersionCheck.needUpdate();
+   if ((updateNeeded.isNeeded)) {
+    Alert.alert('Update Required ',
+      'Download Latest Version From PlayStore',
+      [
+        {
+          text: 'Update Now ',
+          onPress: () => {
+            BackHandler.exitApp();
+            Linking.openURL(updateNeeded.storeUrl);
+          }
+        }
+      ],
+      { cancelable: false }
+
+
+    );
+  }
+}
+
+function initializeBannerAds()
+{
+    // Banners are automatically sized to 320x50 on phones and 728x90 on tablets
+    // You may use the utility method `AppLovinMAX.isTablet()` to help with view sizing adjustments
+    AppLovinMAX.createBanner(BANNER_AD_UNIT_ID, AppLovinMAX.AdViewPosition.BOTTOM_CENTER);
+
+    // Set background or background color for banners to be fully functional
+    // In this case we are setting it to black - PLEASE USE HEX STRINGS ONLY
+    AppLovinMAX.setBannerBackgroundColor(BANNER_AD_UNIT_ID, '#000000');
+
+}
 
 
   useEffect(
@@ -88,6 +156,9 @@ setWallpaperListData( listWall.wallpapers);
     ()=>{
  
       fetchCategory();
+      checkUpdateNeeded()
+      AppLovinMAX.showBanner(BANNER_AD_UNIT_ID);
+
     // dispatch(getCategory('wallpaper'))
    //  dispatch(wallpaperList(categoryListData[0]?.id))
 
@@ -375,7 +446,6 @@ const emptyItem = () => {
         keyExtractor={item => item.id}
       />
  
-
      
        <FlatList
       style={{marginTop:responsiveHeight(1.5),alignSelf:'center'}}
@@ -450,6 +520,19 @@ const emptyItem = () => {
 export default Home
 
 const styles = StyleSheet.create({
+
+  banner: {
+    // Set background color for banners to be fully functional
+    backgroundColor: '#000000',
+    position: 'absolute',
+    width: '100%',
+    height: 'auto', // Defined by AdView per type of AdView and device
+    bottom:  Platform.select({
+      ios: 36, // For bottom safe area
+      android: 0,
+    })
+  },
+
     mainContainer:{
         flex:1,
         backgroundColor:colors.white,

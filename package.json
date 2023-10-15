@@ -20,6 +20,7 @@
     "@reduxjs/toolkit": "^1.9.5",
     "react": "18.2.0",
     "react-native": "0.72.4",
+    "react-native-applovin-max": "^5.7.2",
     "react-native-encrypted-storage": "^4.0.3",
     "react-native-gesture-handler": "^2.12.1",
     "react-native-image-base64-png": "^0.2.1",
