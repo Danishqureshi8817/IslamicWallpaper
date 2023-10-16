@@ -133,7 +133,7 @@ useEffect(() => {
         // Start loading the interstitial straight away
         interstitialAdmob.load();
     
-         const timer = setTimeout(() => loadAdmobIntrestial() , 5000);
+         const timer = setTimeout(() => loadAdmobIntrestial() , 9000);
         // Unsubscribe from events on unmount
         return unsubscribe;
       }, []);
@@ -142,67 +142,71 @@ useEffect(() => {
 
     //google admob 
  
-    const [retryAttempt, setRetryAttempt] = useState(0);
+
+
     
-    const initializeInterstitialAds = () => {
-        AppLovinMAX.addInterstitialLoadedEventListener(() => {
-            // Interstitial ad is ready to show. AppLovinMAX.isInterstitialReady(INTERSTITIAL_AD_UNIT_ID) now returns 'true'
-    
-            // Reset retry attempt
-            setRetryAttempt(0)
-        });
-        AppLovinMAX.addInterstitialLoadFailedEventListener((fi) => {
-            // Interstitial ad failed to load 
-            // AppLovin recommends that you retry with exponentially higher delays up to a maximum delay (in this case 64 seconds)
-            
-            setRetryAttempt(retryAttempt + 1);
-            const retryDelay = Math.pow(2, Math.min(6, retryAttempt));
-    
-            console.log('Interstitial ad failed to load - retrying in ' ,retryDelay + 's',fi);
-              
-            setTimeout(function() {
-                loadInterstitial();
-            }, retryDelay * 1000);
-        });
-        AppLovinMAX.addInterstitialClickedEventListener(() => {  console.log( 'ad clicked') });
-        AppLovinMAX.addInterstitialDisplayedEventListener(() => {  console.log( 'ad dispalyed')   });
-        AppLovinMAX.addInterstitialAdFailedToDisplayEventListener(() => {
-            // Interstitial ad failed to display. AppLovin recommends that you load the next ad
-            loadInterstitial();
-        });
-        AppLovinMAX.addInterstitialHiddenEventListener(() => {
-            loadInterstitial();
-        });
-    
-        // Load the first interstitial
-        loadInterstitial();
-    }
-    
-    const loadInterstitial = () => {
-        AppLovinMAX.loadInterstitial(INTERSTITIAL_AD_UNIT_ID);
-    }
+
+//applovin 
+
 
 //applovin 
 useEffect(() => {
 
-    
-    initializeInterstitialAds();
-    
 
+    //banner 
+
+    // You may use the utility method `AppLovinMAX.isTablet()` to help with view sizing adjustments
+    AppLovinMAX.createBanner(BANNER_AD_UNIT_ID, AppLovinMAX.AdViewPosition.BOTTOM_CENTER);
+
+    // Set background or background color for banners to be fully functional
+    // In this case we are setting it to black - PLEASE USE HEX STRINGS ONLY
+    AppLovinMAX.setBannerBackgroundColor(BANNER_AD_UNIT_ID, '#0a203e');
+  //rewarded
+  AppLovinMAX.showBanner(BANNER_AD_UNIT_ID);
+
+
+
+    //banner
+    //intrestial
+    AppLovinMAX.loadInterstitial(INTERSTITIAL_AD_UNIT_ID);
+    const appLovinIntrestial = AppLovinMAX.addInterstitialLoadedEventListener( async () => {
+      // Interstitial ad is ready to show. AppLovinMAX.isInterstitialReady(INTERSTITIAL_AD_UNIT_ID) now returns 'true'
+      const isInterstitialReady =  await AppLovinMAX.isInterstitialReady(INTERSTITIAL_AD_UNIT_ID);
+      if (isInterstitialReady) {
+       //AppLovinMAX.showInterstitial(INTERSTITIAL_AD_UNIT_ID);
+  
+       //setbuttonDisableTrue(false);
+   
+      }
+    });
+    // rewarded
+    AppLovinMAX.loadRewardedAd(REWARDED_AD_UNIT_ID);
+    const appLovinRewarded =   AppLovinMAX.addRewardedAdLoadedEventListener( async () => {
+      const isRewardedAdReady = await AppLovinMAX.isRewardedAdReady(REWARDED_AD_UNIT_ID);
+  if (isRewardedAdReady) {
+      // AppLovinMAX.showRewardedAd(REWARDED_AD_UNIT_ID);
+   }
+    });
+    //rewarded
+  
+  
+  
+    const timer = setTimeout(() => showApplovinIntrestial() , 5000);
+  
+   
+     return () => { 
+      appLovinIntrestial();
+      appLovinRewarded();
+  
+     }
+  
   }, []);
-
-
- 
- 
+  
   const showApplovinIntrestial = async ()=>{
-    console.log( 'show')
     const isInterstitialReady =  await AppLovinMAX.isInterstitialReady(INTERSTITIAL_AD_UNIT_ID);
     if (isInterstitialReady) {
-
           AppLovinMAX.showInterstitial(INTERSTITIAL_AD_UNIT_ID);
-
-          console.log('showApplovinIntrestial');
-
+         // setbuttonDisableTrue(false);
           return true;
     }else{
       return false;
@@ -212,8 +216,10 @@ useEffect(() => {
   
   const showApplovinRewarded =()=>{
     AppLovinMAX.showRewardedAd(REWARDED_AD_UNIT_ID);
-  }
-   
+   }
+  
+  //applovin 
+  
   
   
   //applovin 
@@ -221,7 +227,7 @@ useEffect(() => {
 
     const setWallpaper = () => {
 
-        showAdmobRewarded();
+        showApplovinRewarded();
         setProcess(true)
 
         WallPaperManager.setWallpaper({uri: `${imageBaseURL}${imgUrl}`, screen: 'home'},
@@ -293,7 +299,7 @@ useEffect(() => {
             requestOptions={{
                 requestNonPersonalizedAdsOnly: true,
             }}
-            />
+        />
 
        </ImageBackground>
        </View>

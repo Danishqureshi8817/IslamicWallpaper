@@ -25,6 +25,42 @@ const interstitialAdmob = InterstitialAd.createForAdRequest(adUnitIdIntrestial, 
 // admob ads
 
 
+
+//ad nnetwork
+import AppLovinMAX from  "react-native-applovin-max";
+
+
+//applovin
+AppLovinMAX.initialize("WbvV2RHHbEGVC_s0Od_B0cZoG97sxIom919586O4G_eOin_W3n6ef2WdHqlug5t5IG_ZSo2D6VGE11RWPocUqk").then(configuration => {
+  // SDK is initialized, start loading ads
+  AppLovinMAX.setVerboseLogging(true);
+
+  console.log( 'configuration',configuration )
+//  AppLovinMAX.showMediationDebugger();
+
+}).catch(error => {
+  console.log( 'AppLovinMAX configurationerror',error )
+
+});
+
+const BANNER_AD_UNIT_ID = Platform.select({
+  android: 'f615ab074dea518f'
+ });
+ const MREC_AD_UNIT_ID = Platform.select({
+  android: '7f7595b047f6719c'
+});
+
+ const REWARDED_AD_UNIT_ID = Platform.select({
+  android: '51b25fecd719c5f0',
+ });
+ const INTERSTITIAL_AD_UNIT_ID = Platform.select({
+  android: '49937ce4575b4e66',
+ });
+
+ //app lovin ad
+
+
+
 const Quotes = ({navigation}) => {
 
   const [categoryListData, setCategoryList] = useState()
@@ -112,6 +148,64 @@ const   loadAdmobIntrestial = ()=>{
 
 
 
+   
+//applovin 
+useEffect(() => {
+
+  //intrestial
+  AppLovinMAX.loadInterstitial(INTERSTITIAL_AD_UNIT_ID);
+  const appLovinIntrestial = AppLovinMAX.addInterstitialLoadedEventListener( async () => {
+    // Interstitial ad is ready to show. AppLovinMAX.isInterstitialReady(INTERSTITIAL_AD_UNIT_ID) now returns 'true'
+    const isInterstitialReady =  await AppLovinMAX.isInterstitialReady(INTERSTITIAL_AD_UNIT_ID);
+    if (isInterstitialReady) {
+     //AppLovinMAX.showInterstitial(INTERSTITIAL_AD_UNIT_ID);
+
+     //setbuttonDisableTrue(false);
+ 
+    }
+  });
+  // rewarded
+  AppLovinMAX.loadRewardedAd(REWARDED_AD_UNIT_ID);
+  const appLovinRewarded =   AppLovinMAX.addRewardedAdLoadedEventListener( async () => {
+    const isRewardedAdReady = await AppLovinMAX.isRewardedAdReady(REWARDED_AD_UNIT_ID);
+if (isRewardedAdReady) {
+     AppLovinMAX.showRewardedAd(REWARDED_AD_UNIT_ID);
+ }
+  });
+  //rewarded
+
+
+
+  const timer = setTimeout(() => showApplovinIntrestial() , 9000);
+
+ 
+   return () => { 
+    appLovinIntrestial();
+    appLovinRewarded();
+
+   }
+
+}, []);
+
+const showApplovinIntrestial = async ()=>{
+  const isInterstitialReady =  await AppLovinMAX.isInterstitialReady(INTERSTITIAL_AD_UNIT_ID);
+  if (isInterstitialReady) {
+        AppLovinMAX.showInterstitial(INTERSTITIAL_AD_UNIT_ID);
+       // setbuttonDisableTrue(false);
+        return true;
+  }else{
+    return false;
+  }
+}
+ 
+
+const showApplovinRewarded =()=>{
+  AppLovinMAX.showRewardedAd(REWARDED_AD_UNIT_ID);
+ }
+
+//applovin 
+
+
   const  fetchCategory =  async()=>{
 
 
@@ -175,13 +269,31 @@ useEffect(
 
             { index%2==0 &&
 
-            <BannerAd
-            unitId={adUnitId}
-            size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
-            requestOptions={{
-                requestNonPersonalizedAdsOnly: true,
-            }}
-        />
+    <AppLovinMAX.AdView adUnitId={MREC_AD_UNIT_ID}
+   adFormat={AppLovinMAX.AdFormat.MREC}
+   style={styles.mrec}
+   autoRefresh={true}
+   onAdLoaded={(adInfo) => {
+     console.log('MREC ad loaded from ' + adInfo.networkName);
+   }}
+   onAdLoadFailed={(errorInfo) => {
+     console.log('MREC ad failed to load with error code ' + errorInfo.code + ' and message: ' + errorInfo.message);
+   }}
+   onAdClicked={(adInfo) => {
+     console.log('MREC ad clicked');
+   }}
+   onAdExpanded={(adInfo) => {
+     console.log('MREC ad expanded')
+   }}
+   onAdCollapsed={(adInfo) => {
+     console.log('MREC ad collapsed')
+   }}
+   onAdRevenuePaid={(adInfo) => {
+     console.log('MREC ad revenue paid: ' + adInfo.revenue);
+   }}/>
+ 
+
+
           }
 
           </>

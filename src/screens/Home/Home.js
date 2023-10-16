@@ -84,7 +84,9 @@ const Home = ({navigation}) => {
   const [Base64, setBase64] = useState()
   const [categoryListData, setCategoryList] = useState()
   const [wallpaperListData, setWallpaperListData] = useState()
+
   const [admobIntrestial, setadmobIntrestial] = useState(false);
+  const [admobRewarded, setadmobRewarded] = useState(false);
 
   const dispatch = useDispatch();
   const userPaidType = 'FREE';
@@ -94,31 +96,97 @@ const Home = ({navigation}) => {
 //  console.log({navigation});
 
 
+
+
     //google ad mob ads
 
-    const   loadAdmobIntrestial = ()=>{
-      if( admobIntrestial==true )  
-      interstitialAdmob.show();
-  
-  }
-  
-  
-      useEffect(  () => {
-          const unsubscribe = interstitialAdmob.addAdEventListener(AdEventType.LOADED, () => {
-            setadmobIntrestial(true)
-  
-          });
-      
-          // Start loading the interstitial straight away
-          interstitialAdmob.load();
-      
-           const timer = setTimeout(() => loadAdmobIntrestial() , 20000);
-          // Unsubscribe from events on unmount
-          return unsubscribe;
-        }, []);
-  
-      //google admob 
+ 
 
+  //intrestiall
+
+const   loadAdmobIntrestial = ()=>{
+
+  if( admobIntrestial==true )  interstitialAdmob.show();
+
+}
+
+
+  useEffect(  () => {
+      const unsubscribe = interstitialAdmob.addAdEventListener(AdEventType.LOADED, () => {
+          setadmobIntrestial(true)
+
+      });
+  
+      // Start loading the interstitial straight away
+      interstitialAdmob.load();
+  
+       const timer = setTimeout(() => loadAdmobIntrestial() , 9000);
+      // Unsubscribe from events on unmount
+      return unsubscribe;
+    }, []);
+
+//intrestail
+
+  //google admob 
+
+
+
+
+//applovin 
+useEffect(() => {
+
+  //intrestial
+  AppLovinMAX.loadInterstitial(INTERSTITIAL_AD_UNIT_ID);
+  const appLovinIntrestial = AppLovinMAX.addInterstitialLoadedEventListener( async () => {
+    // Interstitial ad is ready to show. AppLovinMAX.isInterstitialReady(INTERSTITIAL_AD_UNIT_ID) now returns 'true'
+    const isInterstitialReady =  await AppLovinMAX.isInterstitialReady(INTERSTITIAL_AD_UNIT_ID);
+    if (isInterstitialReady) {
+     //AppLovinMAX.showInterstitial(INTERSTITIAL_AD_UNIT_ID);
+
+     //setbuttonDisableTrue(false);
+ 
+    }
+  });
+  // rewarded
+  AppLovinMAX.loadRewardedAd(REWARDED_AD_UNIT_ID);
+  const appLovinRewarded =   AppLovinMAX.addRewardedAdLoadedEventListener( async () => {
+    const isRewardedAdReady = await AppLovinMAX.isRewardedAdReady(REWARDED_AD_UNIT_ID);
+if (isRewardedAdReady) {
+  //   AppLovinMAX.showRewardedAd(REWARDED_AD_UNIT_ID);
+ }
+  });
+  //rewarded
+
+
+
+  const timer = setTimeout(() => showApplovinIntrestial() , 25000);
+
+ 
+   return () => { 
+    appLovinIntrestial();
+    appLovinRewarded();
+
+   }
+
+}, []);
+
+const showApplovinIntrestial = async ()=>{
+  const isInterstitialReady =  await AppLovinMAX.isInterstitialReady(INTERSTITIAL_AD_UNIT_ID);
+  if (isInterstitialReady) {
+        AppLovinMAX.showInterstitial(INTERSTITIAL_AD_UNIT_ID);
+       // setbuttonDisableTrue(false);
+        return true;
+  }else{
+    return false;
+  }
+}
+ 
+
+const showApplovinRewarded =()=>{
+  AppLovinMAX.showRewardedAd(REWARDED_AD_UNIT_ID);
+}
+
+//applovin 
 
 
 
@@ -200,7 +268,7 @@ function initializeBannerAds()
  
       fetchCategory();
       checkUpdateNeeded()
-      AppLovinMAX.showBanner(BANNER_AD_UNIT_ID);
+    //  AppLovinMAX.showBanner(BANNER_AD_UNIT_ID);
 
     // dispatch(getCategory('wallpaper'))
    //  dispatch(wallpaperList(categoryListData[0]?.id))
@@ -552,13 +620,35 @@ const emptyItem = () => {
                  </View> */}
               </ImageBackground>
 
-     <BannerAd
+              <AppLovinMAX.AdView adUnitId={BANNER_AD_UNIT_ID}
+                    adFormat={AppLovinMAX.AdFormat.BANNER}
+                    style={styles.banner}
+                    onAdLoaded={(adInfo) => {
+                      console.log('Banner ad loaded from ' + adInfo.networkName);
+                    }}
+                    onAdLoadFailed={(errorInfo) => {
+                      console.log('Banner ad failed to load with error code ' + errorInfo.code + ' and message: ' + errorInfo.message);
+                    }}
+                    onAdClicked={(adInfo) => {
+                      console.log('Banner ad clicked');
+                    }}
+                    onAdExpanded={(adInfo) => {
+                      console.log('Banner ad expanded')
+                    }}
+                    onAdCollapsed={(adInfo) => {
+                      console.log('Banner ad collapsed')
+                    }}
+                    onAdRevenuePaid={(adInfo) => {
+                      console.log('Banner ad revenue paid: ' + adInfo.revenue);
+                    }}/>
+
+     {/* <BannerAd
       unitId={adUnitId}
       size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
       requestOptions={{
         requestNonPersonalizedAdsOnly: true,
       }}
-    />
+    /> */}
 
         
 
@@ -584,8 +674,10 @@ const styles = StyleSheet.create({
 
   banner: {
     // Set background color for banners to be fully functional
-    backgroundColor: '#000000',
+    backgroundColor: '#fff',
     position: 'absolute',
+    marginTop:responsiveHeight(8),
+
     width: '100%',
     height: 'auto', // Defined by AdView per type of AdView and device
     bottom:  Platform.select({
