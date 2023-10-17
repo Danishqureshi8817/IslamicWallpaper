@@ -31,6 +31,39 @@ const interstitialAdmob = InterstitialAd.createForAdRequest(adUnitIdIntrestial, 
 // admob ads
 
 
+
+
+//applovin
+import AppLovinMAX from  "react-native-applovin-max";
+
+AppLovinMAX.initialize("WbvV2RHHbEGVC_s0Od_B0cZoG97sxIom919586O4G_eOin_W3n6ef2WdHqlug5t5IG_ZSo2D6VGE11RWPocUqk").then(configuration => {
+  // SDK is initialized, start loading ads
+  AppLovinMAX.setVerboseLogging(true);
+
+  console.log( 'configuration',configuration )
+//  AppLovinMAX.showMediationDebugger();
+
+}).catch(error => {
+  console.log( 'AppLovinMAX configurationerror',error )
+
+});
+
+const BANNER_AD_UNIT_ID = Platform.select({
+  android: 'f615ab074dea518f'
+ });
+ const MREC_AD_UNIT_ID = Platform.select({
+  android: '7f7595b047f6719c'
+});
+
+ const REWARDED_AD_UNIT_ID = Platform.select({
+  android: '51b25fecd719c5f0',
+ });
+ const INTERSTITIAL_AD_UNIT_ID = Platform.select({
+  android: '49937ce4575b4e66',
+ });
+
+ //app lovin ad
+
 const ShortVideo = ({navigation}) => {
 
    
@@ -334,16 +367,27 @@ const   loadAdmobIntrestial = ()=>{
            </View>
         </View>
 
-{ index%2==0 &&
-
-<BannerAd
-unitId={adUnitId}
-size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
-requestOptions={{
-    requestNonPersonalizedAdsOnly: true,
-}}
-/>
-    }
+        <AppLovinMAX.AdView adUnitId={BANNER_AD_UNIT_ID}
+                    adFormat={AppLovinMAX.AdFormat.BANNER}
+                    style={styles.banner}
+                    onAdLoaded={(adInfo) => {
+                      console.log('Banner ad loaded from ' + adInfo.networkName);
+                    }}
+                    onAdLoadFailed={(errorInfo) => {
+                      console.log('Banner ad failed to load with error code ' + errorInfo.code + ' and message: ' + errorInfo.message);
+                    }}
+                    onAdClicked={(adInfo) => {
+                      console.log('Banner ad clicked');
+                    }}
+                    onAdExpanded={(adInfo) => {
+                      console.log('Banner ad expanded')
+                    }}
+                    onAdCollapsed={(adInfo) => {
+                      console.log('Banner ad collapsed')
+                    }}
+                    onAdRevenuePaid={(adInfo) => {
+                      console.log('Banner ad revenue paid: ' + adInfo.revenue);
+                    }}/>
 
 </>
 

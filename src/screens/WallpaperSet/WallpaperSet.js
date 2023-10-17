@@ -133,7 +133,7 @@ useEffect(() => {
         // Start loading the interstitial straight away
         interstitialAdmob.load();
     
-         const timer = setTimeout(() => loadAdmobIntrestial() , 9000);
+      //   const timer = setTimeout(() => loadAdmobIntrestial() , 25000);
         // Unsubscribe from events on unmount
         return unsubscribe;
       }, []);
@@ -191,7 +191,7 @@ useEffect(() => {
   
   
   
-    const timer = setTimeout(() => showApplovinIntrestial() , 5000);
+   //  const timer = setTimeout(() => showApplovinIntrestial() , 5000);
   
    
      return () => { 

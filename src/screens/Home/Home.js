@@ -26,6 +26,9 @@ import fontsName from '../../styles/fontsName';
 import imagePaths from '../../contants/imagePaths';
 import { appName, imageBaseURL,shareImgText } from '../../contants/config';
 
+import ytdl from "react-native-ytdl"
+
+
 import VersionCheck from 'react-native-version-check';
 
 // admob ads 
@@ -120,7 +123,7 @@ const   loadAdmobIntrestial = ()=>{
       // Start loading the interstitial straight away
       interstitialAdmob.load();
   
-       const timer = setTimeout(() => loadAdmobIntrestial() , 9000);
+    //    const timer = setTimeout(() => loadAdmobIntrestial() , 125000);
       // Unsubscribe from events on unmount
       return unsubscribe;
     }, []);
@@ -159,7 +162,7 @@ if (isRewardedAdReady) {
 
 
 
-  const timer = setTimeout(() => showApplovinIntrestial() , 25000);
+  // const timer = setTimeout(() => showApplovinIntrestial() , 355000);
 
  
    return () => { 
@@ -199,6 +202,7 @@ const  load =  async()=>{
 const  fetchCategory =  async()=>{
 
 
+  
 const body = {
   app_name: 'ISLAMICAPP',
   type:'wallpaper'
@@ -260,6 +264,10 @@ function initializeBannerAds()
     AppLovinMAX.setBannerBackgroundColor(BANNER_AD_UNIT_ID, '#000000');
 
 }
+
+
+
+
 
 
   useEffect(
@@ -571,6 +579,7 @@ const emptyItem = () => {
         renderItem={({item,index}) => {
           // console.log("size",(hadisData.length-1),index)
            return(
+            <> 
             <Pressable onPress={()=>{navigation.navigate(NavigationString.WallpaperSet,{imgUrl:item.img_name})}} style={[styles.itemWrapper,{marginTop:(index!=0 && index != 1) &&responsiveHeight(2),marginRight:index%2 == 0 && responsiveWidth(3)}]} >
               <ImageBackground source={{uri:`${imageBaseURL}${item.img_name}`}} style={[styles.image,{justifyContent:index%2 == 0?'space-between':'flex-end'}]} >
                     
@@ -656,6 +665,7 @@ const emptyItem = () => {
             </Pressable>
 
 
+</>
             //   <Image source={item.img} />
            )
         }}

@@ -137,7 +137,7 @@ const   loadAdmobIntrestial = ()=>{
       // Start loading the interstitial straight away
       interstitialAdmob.load();
   
-       const timer = setTimeout(() => loadAdmobIntrestial() , 5000);
+     //  const timer = setTimeout(() => loadAdmobIntrestial() , 52000);
       // Unsubscribe from events on unmount
       return unsubscribe;
     }, []);
@@ -169,14 +169,14 @@ useEffect(() => {
   const appLovinRewarded =   AppLovinMAX.addRewardedAdLoadedEventListener( async () => {
     const isRewardedAdReady = await AppLovinMAX.isRewardedAdReady(REWARDED_AD_UNIT_ID);
 if (isRewardedAdReady) {
-     AppLovinMAX.showRewardedAd(REWARDED_AD_UNIT_ID);
+     //AppLovinMAX.showRewardedAd(REWARDED_AD_UNIT_ID);
  }
   });
   //rewarded
 
 
 
-  const timer = setTimeout(() => showApplovinIntrestial() , 9000);
+    // const timer = setTimeout(() => showApplovinIntrestial() , 59000);
 
  
    return () => { 
@@ -267,34 +267,33 @@ useEffect(
 <ImageBackground resizeMode='cover' source={{uri:`${imageBaseURL}${item?.ori_img}`}} style={[styles.quotesImg,{marginTop:index==0?0:responsiveHeight(2),overflow:'hidden'}]} >
             </ImageBackground>
 
-            { index%2==0 &&
 
-    <AppLovinMAX.AdView adUnitId={MREC_AD_UNIT_ID}
-   adFormat={AppLovinMAX.AdFormat.MREC}
-   style={styles.mrec}
-   autoRefresh={true}
-   onAdLoaded={(adInfo) => {
-     console.log('MREC ad loaded from ' + adInfo.networkName);
-   }}
-   onAdLoadFailed={(errorInfo) => {
-     console.log('MREC ad failed to load with error code ' + errorInfo.code + ' and message: ' + errorInfo.message);
-   }}
-   onAdClicked={(adInfo) => {
-     console.log('MREC ad clicked');
-   }}
-   onAdExpanded={(adInfo) => {
-     console.log('MREC ad expanded')
-   }}
-   onAdCollapsed={(adInfo) => {
-     console.log('MREC ad collapsed')
-   }}
-   onAdRevenuePaid={(adInfo) => {
-     console.log('MREC ad revenue paid: ' + adInfo.revenue);
-   }}/>
+<AppLovinMAX.AdView adUnitId={BANNER_AD_UNIT_ID}
+adFormat={AppLovinMAX.AdFormat.BANNER}
+style={styles.banner}
+onAdLoaded={(adInfo) => {
+  console.log('Banner ad loaded from ' + adInfo.networkName);
+}}
+onAdLoadFailed={(errorInfo) => {
+  console.log('Banner ad failed to load with error code ' + errorInfo.code + ' and message: ' + errorInfo.message);
+}}
+onAdClicked={(adInfo) => {
+  console.log('Banner ad clicked');
+}}
+onAdExpanded={(adInfo) => {
+  console.log('Banner ad expanded')
+}}
+onAdCollapsed={(adInfo) => {
+  console.log('Banner ad collapsed')
+}}
+onAdRevenuePaid={(adInfo) => {
+  console.log('Banner ad revenue paid: ' + adInfo.revenue);
+}}/>
+ 
  
 
 
-          }
+          
 
           </>
             
