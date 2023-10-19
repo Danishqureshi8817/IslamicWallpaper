@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View,Image,FlatList,ImageBackground,TouchableOpacity,Linking, PermissionsAndroid,ToastAndroid,Pressable , Button } from 'react-native'
+import { StyleSheet, Text, View,Image,FlatList,ImageBackground,TouchableOpacity,Linking, PermissionsAndroid,ToastAndroid,Pressable , Button, Platform } from 'react-native'
 import React,{useState,useEffect} from 'react'
 import colors from '../../styles/colors'
 
@@ -10,6 +10,7 @@ import {
   } from 'react-native-responsive-dimensions';
 import { wHeight, wWidht } from '../../styles/Dimensions'
 import Icon from 'react-native-vector-icons/Ionicons';
+import OIcon from 'react-native-vector-icons/Octicons';
 import Share from 'react-native-share';
 import RNFetchBlob from 'rn-fetch-blob'
 import NavigationString from '../../contants/NavigationString'
@@ -166,8 +167,8 @@ if (isRewardedAdReady) {
 
  
    return () => { 
-    appLovinIntrestial();
-    appLovinRewarded();
+    // appLovinIntrestial();
+    // appLovinRewarded();
 
    }
 
@@ -299,9 +300,14 @@ function initializeBannerAds()
   // const imageShr = ''
 
   const requestStoragePermission = async (imgUri) => {
+    // console.log({imgUri});
+    if(Platform.OS == 'android' && Platform.Version >= '30'){
+    downloadFile(imgUri)
+    }
+    if(Platform.OS == 'android' && Platform.Version <= '30'){
     try {
-      const granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+
+      const granted = await PermissionsAndroid.request( PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
         {
           title: 'Islamic App Storage Permission',
           message:
@@ -312,7 +318,10 @@ function initializeBannerAds()
           buttonPositive: 'OK',
         },
       );
+      console.log({granted});
+
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        
         downloadFile(imgUri)
       } else {
 
@@ -320,7 +329,7 @@ function initializeBannerAds()
     } catch (err) {
       console.warn(err);
     }
-  };
+  };}
 
   const downloadFile= (uriImg) => {
         const {config,fs} = RNFetchBlob;
@@ -342,12 +351,13 @@ function initializeBannerAds()
     //some headers ..
   })
   .then((res) => {
+    console.log({res});
     // the temp file path
     // res.base64().then((rr)=>{
     //   console.log("Base64",rr);
     // })
     
-    ToastAndroid.show('File downloaded Successfully', ToastAndroid.SHORT);
+    ToastAndroid.show('Wallpaper downloaded Successfully', ToastAndroid.SHORT);
  
   })
   }
@@ -578,32 +588,41 @@ const emptyItem = () => {
         ListEmptyComponent={emptyItem}
         renderItem={({item,index}) => {
           // console.log("size",(hadisData.length-1),index)
+          // console.log({item})
            return(
             <> 
             <Pressable onPress={()=>{navigation.navigate(NavigationString.WallpaperSet,{imgUrl:item.img_name})}} style={[styles.itemWrapper,{marginTop:(index!=0 && index != 1) &&responsiveHeight(2),marginRight:index%2 == 0 && responsiveWidth(3)}]} >
-              <ImageBackground source={{uri:`${imageBaseURL}${item.img_name}`}} style={[styles.image,{justifyContent:index%2 == 0?'space-between':'flex-end'}]} >
+
+            {!item?.img_name && <Text style={{color:'red'}} >Loddd</Text>}
+              <ImageBackground  source={{uri:`${imageBaseURL}${item?.img_name}`}} style={[styles.image,{justifyContent:'flex-start'}]} >
                     
-          {  index%2 == 0 &&        <View style={styles.trendingWrapper} >
-                      <Image source={imagePaths.fire} style={{resizeMode:'contain',width:responsiveWidth(4),height:responsiveHeight(1.8),marginLeft:responsiveWidth(0.8)}} />
-                      <Text style={{color:'#FF7A00',fontSize:responsiveFontSize(1),fontFamily:fontsName.PoppinsLight,alignSelf:'center',fontWeight:'500'}} >Trending</Text>
-                    </View>}
+         
                 
-
+                
         
-                    <View style={styles.iconsWrapper} >
-                        <View style={styles.leftIconWrapper}>
+                    <View style={[styles.iconsWrapper,{ justifyContent:'space-between',}]} >
+                    
                         {/* <Icon name="eye" size={responsiveWidth(5)} color={'#ebebeb'} /> */}
-                        <Text style={{color:colors.white,marginLeft:responsiveWidth(1),fontSize:responsiveFontSize(1.4),fontFamily:fontsName.PoppinsRegular}} >211</Text>
+                        {/* <Text style={{color:colors.white,marginLeft:responsiveWidth(1),fontSize:responsiveFontSize(1.4),fontFamily:fontsName.PoppinsRegular}} >211</Text>
 
-                        <Text style={{color:colors.white,marginLeft:responsiveWidth(1),fontSize:responsiveFontSize(1.4),fontFamily:fontsName.PoppinsRegular}} >Views</Text>
+                        <Text style={{color:colors.white,marginLeft:responsiveWidth(1),fontSize:responsiveFontSize(1.4),fontFamily:fontsName.PoppinsRegular}} >Views</Text> */}
 
                         {/* <Icon name="share-social" size={responsiveWidth(5)} color={'#ebebeb'} />
                         <Text style={{color:colors.black,fontWeight:'500',marginLeft:responsiveWidth(1)}} >25</Text> */}
-                        </View>
 
+                      <View style={styles.trendingWrapper} >
+                      <Image source={imagePaths.fire} style={{resizeMode:'contain',width:responsiveWidth(4),height:responsiveHeight(1.8),marginLeft:responsiveWidth(0.8)}} />
+                      <Text style={{color:'#FF7A00',fontSize:responsiveFontSize(1.2),fontFamily:fontsName.PoppinsRegular,fontWeight:'700'}} >{item?.no_view} Views</Text>
+                    </View>
+                   
                         <View style={styles.rightIconWrapper}>
-                        <TouchableOpacity onPress={()=>{myShare(item.img_name)}} style={styles.iconCircle} >
+                        <TouchableOpacity onPress={()=>{myShare(item?.img_name)}} style={[styles.iconCircle,{  paddingHorizontal:responsiveWidth(1.2),}]} >
                         <Icon  name="paper-plane-outline" size={responsiveWidth(3.5)} color={'#FFFFFF'} />
+                        
+                        </TouchableOpacity>
+
+                        <TouchableOpacity onPress={()=>{requestStoragePermission(item?.img_name)}} style={[styles.iconCircle,{  paddingHorizontal:responsiveWidth(1.8),}]} >
+                        <OIcon  name="download" size={responsiveWidth(3.5)} color={'#FFFFFF'} />
                         
                         </TouchableOpacity>
                         
@@ -624,11 +643,12 @@ const emptyItem = () => {
                         </View>
                        
                     </View>
+
                     {/* <View style={{backgroundColor:'rgba(36,87,116,0.6)',width:'100%',height:responsiveHeight(4.5),position:'absolute'}} >
 
                  </View> */}
               </ImageBackground>
-
+{/* 
               <AppLovinMAX.AdView adUnitId={BANNER_AD_UNIT_ID}
                     adFormat={AppLovinMAX.AdFormat.BANNER}
                     style={styles.banner}
@@ -649,7 +669,7 @@ const emptyItem = () => {
                     }}
                     onAdRevenuePaid={(adInfo) => {
                       console.log('Banner ad revenue paid: ' + adInfo.revenue);
-                    }}/>
+                    }}/> */}
 
      {/* <BannerAd
       unitId={adUnitId}
@@ -749,7 +769,7 @@ const styles = StyleSheet.create({
     image:{
          resizeMode:'stretch',
         width:'100%',
-         height:responsiveHeight(34),
+         height:responsiveHeight(37),
          alignSelf:'center',
          
 
@@ -767,13 +787,15 @@ const styles = StyleSheet.create({
     },
     iconsWrapper:{
         flexDirection:'row',
-        justifyContent:'space-between',
+       
         paddingHorizontal:responsiveWidth(3),
         alignItems:'center',
         // paddingBottom:responsiveHeight(0.5),
         zIndex:5,
         width:'100%',
-        marginBottom:responsiveHeight(1.5)
+        // marginBottom:responsiveHeight(1.5),
+        marginTop:responsiveHeight(1)
+      
         
     },
     leftIconWrapper:{
@@ -782,7 +804,7 @@ const styles = StyleSheet.create({
     },
     rightIconWrapper:{
         flexDirection:'row',
-        gap:responsiveWidth(2),
+        gap:responsiveWidth(1),
         
        
     },
@@ -792,18 +814,21 @@ const styles = StyleSheet.create({
       borderRadius:responsiveWidth(14),
       justifyContent:'center',
       alignItems:'center',
-      paddingHorizontal:responsiveWidth(1.2),
-      paddingVertical:responsiveHeight(0.5)
+    
+      paddingVertical:responsiveHeight(0.5),
+      backgroundColor:colors.whiteOpacity20
     },
     trendingWrapper:{
       flexDirection:'row',
       alignItems:'center',
       backgroundColor:colors.white,
-      width:'40%',
-      marginTop:responsiveHeight(1.5),
+      width:'50%',
+      
+      // marginTop:responsiveHeight(1.5),
       borderRadius:responsiveWidth(5),
-      marginLeft:responsiveWidth(2),
-      paddingVertical:responsiveHeight(0.2)
+      // marginLeft:responsiveWidth(2),
+      paddingVertical:responsiveHeight(0.4),
+      
       
     }
 })

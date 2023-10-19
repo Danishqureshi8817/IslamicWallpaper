@@ -20,8 +20,8 @@ export default {
     inputBorder:'rgba(0,0,0,0.08)',
     touchableHighlight:'rgba(0,0,0,0.05)',
     shimmerColor1:'#564d4d',
-    shimmerColor2:'#8e8e8e',
-    shimmerColor3:'#564d4d',
+    shimmerColor2:'#FFE4AF',
+    shimmerColor3:'#FFBD3C',
     exploreButton:'#1E1E1E',
    
  

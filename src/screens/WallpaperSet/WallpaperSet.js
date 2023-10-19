@@ -272,8 +272,8 @@ useEffect(() => {
        </View> */}
 
        <View style={styles.wallpaperWraper} >
-       <ImageBackground source={{uri:`${imageBaseURL}${imgUrl}`}}  style={styles.wallpaperImg} > 
-       <Pressable onPress={()=>{navigation.goBack()}} style={{marginBottom:responsiveHeight(30),marginLeft:responsiveWidth(2)}} >
+       <ImageBackground source={{uri:`${imageBaseURL}${imgUrl}`}} style={styles.wallpaperImg} > 
+       <Pressable onPress={()=>{navigation.goBack()}} style={{marginBottom:responsiveHeight(25),marginLeft:responsiveWidth(2)}} >
        <Icon
           name="arrow-back-outline"
           size={responsiveWidth(7)}

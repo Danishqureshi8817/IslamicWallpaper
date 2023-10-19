@@ -20,4 +20,5 @@ export default imagePath = {
     wallpaperIcon:require('../assets/icons/wallpaper.png'),
     versionIcon:require('../assets/icons/version.png'),
     logoutIcon:require('../assets/icons/logout.png'),
+    loadImg:require('../assets/images/imgLoad.gif'),
 }
