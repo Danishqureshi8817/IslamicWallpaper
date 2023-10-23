@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View,Image,FlatList,ImageBackground,TouchableOpacity,Linking, PermissionsAndroid,ToastAndroid,Pressable , Button, Platform } from 'react-native'
+import { StyleSheet, Text, View,Image,FlatList,ImageBackground,TouchableOpacity,Linking, PermissionsAndroid,ToastAndroid,Pressable , Button, Platform, ActivityIndicator } from 'react-native'
 import React,{useState,useEffect} from 'react'
 import colors from '../../styles/colors'
 
@@ -91,6 +91,8 @@ const Home = ({navigation}) => {
 
   const [admobIntrestial, setadmobIntrestial] = useState(false);
   const [admobRewarded, setadmobRewarded] = useState(false);
+
+  const [imgLoad, setImgLoad] = useState(false)
 
   const dispatch = useDispatch();
   const userPaidType = 'FREE';
@@ -594,10 +596,13 @@ const emptyItem = () => {
             <Pressable onPress={()=>{navigation.navigate(NavigationString.WallpaperSet,{imgUrl:item.img_name})}} style={[styles.itemWrapper,{marginTop:(index!=0 && index != 1) &&responsiveHeight(2),marginRight:index%2 == 0 && responsiveWidth(3)}]} >
 
             {!item?.img_name && <Text style={{color:'red'}} >Loddd</Text>}
-              <ImageBackground  source={{uri:`${imageBaseURL}${item?.img_name}`}} style={[styles.image,{justifyContent:'flex-start'}]} >
+              <ImageBackground 
+               onLoadStart={()=>{setImgLoad(true)}}
+               onLoadEnd={()=>{setImgLoad(false)}}
+                source={{uri:`${imageBaseURL}${item?.img_name}`}} style={[styles.image,{justifyContent:'flex-start'}]} >
                     
          
-                
+               
                 
         
                     <View style={[styles.iconsWrapper,{ justifyContent:'space-between',}]} >
@@ -643,6 +648,8 @@ const emptyItem = () => {
                         </View>
                        
                     </View>
+
+                    <ActivityIndicator animating={imgLoad}  color={colors.shimmerColor3} size={'large'} style={{marginTop:responsiveHeight(12)}} />
 
                     {/* <View style={{backgroundColor:'rgba(36,87,116,0.6)',width:'100%',height:responsiveHeight(4.5),position:'absolute'}} >
 
