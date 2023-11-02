@@ -30,6 +30,7 @@ const interstitialAdmob = InterstitialAd.createForAdRequest(adUnitIdIntrestial, 
 
 //ad nnetwork
 import AppLovinMAX from  "react-native-applovin-max";
+import { CallApiJson } from '../../utiles/network'
 
 
 //applovin
@@ -65,8 +66,9 @@ const BANNER_AD_UNIT_ID = Platform.select({
 
 const WallpaperSet = ({navigation,route}) => {
 
-    const {imgUrl} = route.params;
+    const {imgUrl, wallId } = route.params;
 
+    console.log('wallId',  route.params )
     const [process, setProcess] = useState(false)
     const [admobIntrestial, setadmobIntrestial] = useState(false);
     const [admobRewarded, setadmobRewarded] = useState(false);
@@ -81,6 +83,44 @@ const WallpaperSet = ({navigation,route}) => {
 
 //rewarded
 
+const  wallpaperView =  async()=>{
+
+
+  console.log('wallpaperView',  wallId )
+
+  const body = {
+    app_name: 'ISLAMICAPP',
+    type:'wallpaper',
+    wallId:wallId
+  };
+  
+  
+  const listCat = await CallApiJson('wallpaperview', 'POST',body);
+  console.log('wallpaperView',  listCat )
+
+   //dispatch(wallpaperList(listCat.category[0]?.id))
+  //
+  } 
+  
+const  wallpaperSetApply =  async()=>{
+
+
+  
+  const body = {
+    app_name: 'ISLAMICAPP',
+    type:'wallpaper',
+    wallId: wallId
+  };
+  
+  
+  const listCat = await CallApiJson('wallpapersetapplied', 'POST',body);
+    
+   //dispatch(wallpaperList(listCat.category[0]?.id))
+  //
+  } 
+  
+
+  
 
 const   showAdmobRewarded = ()=>{
 
@@ -90,6 +130,8 @@ const   showAdmobRewarded = ()=>{
 }
 
 useEffect(() => {
+  wallpaperView();
+
     const unsubscribeLoaded = rewardedAdMob.addAdEventListener(RewardedAdEventType.LOADED, () => {
 
         setadmobRewarded(true)
@@ -227,9 +269,8 @@ useEffect(() => {
 
     const setWallpaper = () => {
 
-        showApplovinRewarded();
         setProcess(true)
-
+        wallpaperSetApply();
         WallPaperManager.setWallpaper({uri: `${imageBaseURL}${imgUrl}`, screen: 'home'},
         
         (res) => { console.log(res) ;
@@ -242,7 +283,9 @@ useEffect(() => {
                 'Success ',
                 'Wallpaper Set Successfully ',
                 [
-                   {text: 'Yes', onPress:  ()=>   {  navigationUrl.navigate('Home') }   },
+                   {text: 'Yes', onPress:  ()=>   {    navigationUrl.navigate('Home');     showApplovinIntrestial();
+ 
+                    }   },
                 ],
                 { cancelable: false }
 
@@ -293,7 +336,29 @@ useEffect(() => {
 
        </TouchableOpacity>
 
-       <BannerAd
+
+       <AppLovinMAX.AdView adUnitId={BANNER_AD_UNIT_ID}
+                    adFormat={AppLovinMAX.AdFormat.BANNER}
+                    style={styles.banner}
+                    onAdLoaded={(adInfo) => {
+                      console.log('Banner ad loaded from ' + adInfo.networkName);
+                    }}
+                    onAdLoadFailed={(errorInfo) => {
+                      console.log('Banner ad failed to load with error code ' + errorInfo.code + ' and message: ' + errorInfo.message);
+                    }}
+                    onAdClicked={(adInfo) => {
+                      console.log('Banner ad clicked');
+                    }}
+                    onAdExpanded={(adInfo) => {
+                      console.log('Banner ad expanded')
+                    }}
+                    onAdCollapsed={(adInfo) => {
+                      console.log('Banner ad collapsed')
+                    }}
+                    onAdRevenuePaid={(adInfo) => {
+                      console.log('Banner ad revenue paid: ' + adInfo.revenue);
+                    }}/>
+                           <BannerAd
             unitId={adUnitId}
             size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
             requestOptions={{

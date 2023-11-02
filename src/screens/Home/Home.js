@@ -279,7 +279,7 @@ function initializeBannerAds()
  
       fetchCategory();
       checkUpdateNeeded()
-    //  AppLovinMAX.showBanner(BANNER_AD_UNIT_ID);
+     AppLovinMAX.showBanner(BANNER_AD_UNIT_ID);
 
     // dispatch(getCategory('wallpaper'))
    //  dispatch(wallpaperList(categoryListData[0]?.id))
@@ -324,7 +324,11 @@ function initializeBannerAds()
 
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
         
-        downloadFile(imgUri)
+        downloadFile(imgUri);
+
+        showApplovinIntrestial();
+
+
       } else {
 
       }
@@ -391,6 +395,8 @@ function initializeBannerAds()
 
   try {
     const ShareResponse = await Share.open(shareOptions);
+
+    showApplovinIntrestial();
 
   } catch (error) {
     console.log('Error =>',error);
@@ -593,7 +599,7 @@ const emptyItem = () => {
           // console.log({item})
            return(
             <> 
-            <Pressable onPress={()=>{navigation.navigate(NavigationString.WallpaperSet,{imgUrl:item.img_name})}} style={[styles.itemWrapper,{marginTop:(index!=0 && index != 1) &&responsiveHeight(2),marginRight:index%2 == 0 && responsiveWidth(3)}]} >
+            <Pressable onPress={()=>{navigation.navigate(NavigationString.WallpaperSet,{imgUrl:item.img_name ,   wallId:item?.id })}} style={[styles.itemWrapper,{marginTop:(index!=0 && index != 1) &&responsiveHeight(2),marginRight:index%2 == 0 && responsiveWidth(3)}]} >
 
             {!item?.img_name && <Text style={{color:'red'}} >Loddd</Text>}
               <ImageBackground 
@@ -617,7 +623,7 @@ const emptyItem = () => {
 
                       <View style={styles.trendingWrapper} >
                       <Image source={imagePaths.fire} style={{resizeMode:'contain',width:responsiveWidth(4),height:responsiveHeight(1.8),marginLeft:responsiveWidth(0.8)}} />
-                      <Text style={{color:'#FF7A00',fontSize:responsiveFontSize(1.2),fontFamily:fontsName.PoppinsRegular,fontWeight:'700'}} >{item?.no_view} Views</Text>
+                      <Text style={{color:'#FF7A00',fontSize:responsiveFontSize(1.2),fontFamily:fontsName.PoppinsRegular,fontWeight:'700'}} >{ Math.floor(Math.random() * 7000) + 100 } Views</Text>
                     </View>
                    
                         <View style={styles.rightIconWrapper}>
@@ -626,7 +632,7 @@ const emptyItem = () => {
                         
                         </TouchableOpacity>
 
-                        <TouchableOpacity onPress={()=>{requestStoragePermission(item?.img_name)}} style={[styles.iconCircle,{  paddingHorizontal:responsiveWidth(1.8),}]} >
+                        <TouchableOpacity onPress={()=>{requestStoragePermission(item?.img_name);      }} style={[styles.iconCircle,{  paddingHorizontal:responsiveWidth(1.8),}]} >
                         <OIcon  name="download" size={responsiveWidth(3.5)} color={'#FFFFFF'} />
                         
                         </TouchableOpacity>
@@ -655,8 +661,8 @@ const emptyItem = () => {
 
                  </View> */}
               </ImageBackground>
-{/* 
-              <AppLovinMAX.AdView adUnitId={BANNER_AD_UNIT_ID}
+
+              {/* <AppLovinMAX.AdView adUnitId={BANNER_AD_UNIT_ID}
                     adFormat={AppLovinMAX.AdFormat.BANNER}
                     style={styles.banner}
                     onAdLoaded={(adInfo) => {
